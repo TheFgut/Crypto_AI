@@ -15,13 +15,13 @@ using CryptoAnalizerAI.settings;
 
 namespace CryptoAnalizerAI
 {
-    public partial class ControlPanel : Form
+    public partial class ControlPanelWindow : Form
     {
         public static BinanceWebParser webParser { get; private set; }
         private Settings basicSettings;
         private const string basicSetSaveFileDestination = "settings\\";
         private LoaderAndSaver<Settings> settingsLoaderAndSaver;
-        public ControlPanel()
+        public ControlPanelWindow()
         {
             //
             settingsLoaderAndSaver = new LoaderAndSaver<Settings>(basicSetSaveFileDestination, "basicSettings.txt");
@@ -46,7 +46,7 @@ namespace CryptoAnalizerAI
                 chronometerWindow = new Chronometer(webParser);
                 ChronometerSwitchBut.Text = "OFF";
                 openChronometrSettingsBut.Enabled = true;
-                ChronometerSwitchBut.BackColor = Color.Red;
+                ChronometerSwitchBut.BackColor = Color.Yellow;
             }
             else
             {
@@ -148,6 +148,11 @@ namespace CryptoAnalizerAI
         {
             trainingWindow.FormClosed -= TrainingWindowClosed;
             trainingWindow = null;
+        }
+
+        private void WebModuleSwitchButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

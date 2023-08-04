@@ -1,7 +1,7 @@
 ﻿
 namespace CryptoAnalizerAI
 {
-    partial class ControlPanel
+    partial class ControlPanelWindow
     {
         /// <summary>
         ///  Required designer variable.
@@ -31,7 +31,6 @@ namespace CryptoAnalizerAI
         {
             this.components = new System.ComponentModel.Container();
             this.ChronometerSwitchBut = new System.Windows.Forms.Button();
-            this.chronometerNameBox = new System.Windows.Forms.TextBox();
             this.FixedUpdate = new System.Windows.Forms.Timer(this.components);
             this.textDisplay = new System.Windows.Forms.TextBox();
             this.openChronometrSettingsBut = new System.Windows.Forms.Button();
@@ -40,6 +39,9 @@ namespace CryptoAnalizerAI
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restartBut = new System.Windows.Forms.Button();
             this.AI_TrainingBut = new System.Windows.Forms.Button();
+            this.WebModuleSwitchButton = new System.Windows.Forms.Button();
+            this.WebModuleLabel = new System.Windows.Forms.Label();
+            this.CourseChroometerLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,22 +49,13 @@ namespace CryptoAnalizerAI
             // 
             this.ChronometerSwitchBut.AccessibleDescription = "";
             this.ChronometerSwitchBut.BackColor = System.Drawing.SystemColors.Control;
-            this.ChronometerSwitchBut.Location = new System.Drawing.Point(142, 27);
+            this.ChronometerSwitchBut.Location = new System.Drawing.Point(142, 91);
             this.ChronometerSwitchBut.Name = "ChronometerSwitchBut";
             this.ChronometerSwitchBut.Size = new System.Drawing.Size(75, 23);
             this.ChronometerSwitchBut.TabIndex = 0;
             this.ChronometerSwitchBut.Text = "ON";
             this.ChronometerSwitchBut.UseVisualStyleBackColor = false;
             this.ChronometerSwitchBut.Click += new System.EventHandler(this.ChronometerSwitchBut_Click);
-            // 
-            // chronometerNameBox
-            // 
-            this.chronometerNameBox.Location = new System.Drawing.Point(12, 27);
-            this.chronometerNameBox.Name = "chronometerNameBox";
-            this.chronometerNameBox.ReadOnly = true;
-            this.chronometerNameBox.Size = new System.Drawing.Size(124, 23);
-            this.chronometerNameBox.TabIndex = 1;
-            this.chronometerNameBox.Text = "Course chronometer";
             // 
             // FixedUpdate
             // 
@@ -71,7 +64,7 @@ namespace CryptoAnalizerAI
             // 
             // textDisplay
             // 
-            this.textDisplay.Location = new System.Drawing.Point(12, 56);
+            this.textDisplay.Location = new System.Drawing.Point(12, 120);
             this.textDisplay.Name = "textDisplay";
             this.textDisplay.Size = new System.Drawing.Size(124, 23);
             this.textDisplay.TabIndex = 2;
@@ -79,7 +72,7 @@ namespace CryptoAnalizerAI
             // openChronometrSettingsBut
             // 
             this.openChronometrSettingsBut.Enabled = false;
-            this.openChronometrSettingsBut.Location = new System.Drawing.Point(223, 27);
+            this.openChronometrSettingsBut.Location = new System.Drawing.Point(223, 91);
             this.openChronometrSettingsBut.Name = "openChronometrSettingsBut";
             this.openChronometrSettingsBut.Size = new System.Drawing.Size(35, 23);
             this.openChronometrSettingsBut.TabIndex = 3;
@@ -132,16 +125,46 @@ namespace CryptoAnalizerAI
             this.AI_TrainingBut.UseVisualStyleBackColor = true;
             this.AI_TrainingBut.Click += new System.EventHandler(this.AI_TrainingBut_Click);
             // 
+            // WebModuleSwitchButton
+            // 
+            this.WebModuleSwitchButton.Location = new System.Drawing.Point(142, 59);
+            this.WebModuleSwitchButton.Name = "WebModuleSwitchButton";
+            this.WebModuleSwitchButton.Size = new System.Drawing.Size(75, 23);
+            this.WebModuleSwitchButton.TabIndex = 7;
+            this.WebModuleSwitchButton.Text = "ON";
+            this.WebModuleSwitchButton.UseVisualStyleBackColor = true;
+            this.WebModuleSwitchButton.Click += new System.EventHandler(this.WebModuleSwitchButton_Click);
+            // 
+            // WebModuleLabel
+            // 
+            this.WebModuleLabel.AutoSize = true;
+            this.WebModuleLabel.Location = new System.Drawing.Point(61, 63);
+            this.WebModuleLabel.Name = "WebModuleLabel";
+            this.WebModuleLabel.Size = new System.Drawing.Size(75, 15);
+            this.WebModuleLabel.TabIndex = 8;
+            this.WebModuleLabel.Text = "Web module";
+            // 
+            // CourseChroometerLabel
+            // 
+            this.CourseChroometerLabel.AutoSize = true;
+            this.CourseChroometerLabel.Location = new System.Drawing.Point(20, 95);
+            this.CourseChroometerLabel.Name = "CourseChroometerLabel";
+            this.CourseChroometerLabel.Size = new System.Drawing.Size(116, 15);
+            this.CourseChroometerLabel.TabIndex = 9;
+            this.CourseChroometerLabel.Text = "Course chronometer";
+            // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.CourseChroometerLabel);
+            this.Controls.Add(this.WebModuleLabel);
+            this.Controls.Add(this.WebModuleSwitchButton);
             this.Controls.Add(this.AI_TrainingBut);
             this.Controls.Add(this.restartBut);
             this.Controls.Add(this.openChronometrSettingsBut);
             this.Controls.Add(this.textDisplay);
-            this.Controls.Add(this.chronometerNameBox);
             this.Controls.Add(this.ChronometerSwitchBut);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -159,7 +182,6 @@ namespace CryptoAnalizerAI
         #endregion
 
         private System.Windows.Forms.Button ChronometerSwitchBut;
-        private System.Windows.Forms.TextBox chronometerNameBox;
         private System.Windows.Forms.Timer FixedUpdate;
         private System.Windows.Forms.TextBox textDisplay;
         private System.Windows.Forms.Button openChronometrSettingsBut;
@@ -168,6 +190,9 @@ namespace CryptoAnalizerAI
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.Button restartBut;
         private System.Windows.Forms.Button AI_TrainingBut;
+        private System.Windows.Forms.Button WebModuleSwitchButton;
+        private System.Windows.Forms.Label WebModuleLabel;
+        private System.Windows.Forms.Label CourseChroometerLabel;
     }
 }
 
