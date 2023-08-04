@@ -45,7 +45,7 @@
 :white_check_mark:  Примитивный конструктор сети
 
 #### Схема разнообразия нейронных сетей
-![Alt text](//forGithub/neuralnetworks-880x1320.jpg "виды нейронных сетей")
+![Alt text](https://github.com/TheFgut/Crypto_AI/blob/main/forGithub/neuralnetworks-880x1320.jpg "виды нейронных сетей")
 
 ### Реализация механизма обучения:
 
