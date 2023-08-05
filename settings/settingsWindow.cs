@@ -21,6 +21,7 @@ namespace CryptoAnalizerAI.settings
 
             InitializeComponent();
             mainCryptoComboBox.DataSource = settings.awailablePairs.getAvailableMainCryptos();
+
             Crypto main = settings.choosedPair.first;
             mainCryptoComboBox.SelectedItem = main;
             comparedToCryptoComboBox.DataSource = settings.awailablePairs.getAvailableComparedCryptos(main);

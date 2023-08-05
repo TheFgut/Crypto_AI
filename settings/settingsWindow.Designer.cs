@@ -63,7 +63,7 @@ namespace CryptoAnalizerAI.settings
             // saveBut
             // 
             this.saveBut.Enabled = false;
-            this.saveBut.Location = new System.Drawing.Point(498, 420);
+            this.saveBut.Location = new System.Drawing.Point(28, 138);
             this.saveBut.Name = "saveBut";
             this.saveBut.Size = new System.Drawing.Size(137, 23);
             this.saveBut.TabIndex = 2;
@@ -73,7 +73,7 @@ namespace CryptoAnalizerAI.settings
             // 
             // closeBut
             // 
-            this.closeBut.Location = new System.Drawing.Point(688, 420);
+            this.closeBut.Location = new System.Drawing.Point(221, 138);
             this.closeBut.Name = "closeBut";
             this.closeBut.Size = new System.Drawing.Size(85, 23);
             this.closeBut.TabIndex = 3;
@@ -116,7 +116,7 @@ namespace CryptoAnalizerAI.settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(317, 195);
             this.Controls.Add(this.cryptoChooseGroupBox);
             this.Controls.Add(this.closeBut);
             this.Controls.Add(this.saveBut);

@@ -86,7 +86,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
                 int incorrect;
                 int broken;
 
-                Dataset loaded = DatasetsLoader.LoadDataset(settingsFiles[0], out incorrect, out broken);
+                Dataset loaded = DatasetsLoader.LoadDataset(settingFilesPath, out incorrect, out broken);
                 if (loaded != null)
                 {
                     loadedDatasets.Add(loaded);

@@ -136,8 +136,9 @@ namespace CryptoAnalizerAI.AI_training
             private DatasetVisualization datasetVisualization;
             public void DatasetChanged()
             {
-                int datasetID = datasetManager.dataWalker.currentDataset;
                 if (datasetManager.datasets == null || datasetManager.datasets.Length == 0) return;
+                int datasetID = datasetManager.dataWalker.currentDatasetID;
+ 
                 Dataset dataset = datasetManager.datasets[datasetID];
 
                 datasetVisualization = new DatasetVisualization(dataset, width, HalfHeigth);

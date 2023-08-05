@@ -32,7 +32,6 @@ namespace CryptoAnalizerAI
             this.components = new System.ComponentModel.Container();
             this.ChronometerSwitchBut = new System.Windows.Forms.Button();
             this.FixedUpdate = new System.Windows.Forms.Timer(this.components);
-            this.textDisplay = new System.Windows.Forms.TextBox();
             this.openChronometrSettingsBut = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.MenuToolStripItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,13 +60,6 @@ namespace CryptoAnalizerAI
             // 
             this.FixedUpdate.Enabled = true;
             this.FixedUpdate.Tick += new System.EventHandler(this.FixedUpdate_Tick);
-            // 
-            // textDisplay
-            // 
-            this.textDisplay.Location = new System.Drawing.Point(12, 120);
-            this.textDisplay.Name = "textDisplay";
-            this.textDisplay.Size = new System.Drawing.Size(124, 23);
-            this.textDisplay.TabIndex = 2;
             // 
             // openChronometrSettingsBut
             // 
@@ -153,22 +145,21 @@ namespace CryptoAnalizerAI
             this.CourseChroometerLabel.TabIndex = 9;
             this.CourseChroometerLabel.Text = "Course chronometer";
             // 
-            // ControlPanel
+            // ControlPanelWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 154);
             this.Controls.Add(this.CourseChroometerLabel);
             this.Controls.Add(this.WebModuleLabel);
             this.Controls.Add(this.WebModuleSwitchButton);
             this.Controls.Add(this.AI_TrainingBut);
             this.Controls.Add(this.restartBut);
             this.Controls.Add(this.openChronometrSettingsBut);
-            this.Controls.Add(this.textDisplay);
             this.Controls.Add(this.ChronometerSwitchBut);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "ControlPanel";
+            this.Name = "ControlPanelWindow";
             this.Text = "Control panel";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ControlPanel_FormClosing);
             this.Load += new System.EventHandler(this.ControlPanel_Load);
@@ -183,7 +174,6 @@ namespace CryptoAnalizerAI
 
         private System.Windows.Forms.Button ChronometerSwitchBut;
         private System.Windows.Forms.Timer FixedUpdate;
-        private System.Windows.Forms.TextBox textDisplay;
         private System.Windows.Forms.Button openChronometrSettingsBut;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem MenuToolStripItem;

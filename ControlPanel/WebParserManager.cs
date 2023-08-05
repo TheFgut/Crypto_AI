@@ -24,6 +24,7 @@ namespace CryptoAnalizerAI.ControlPanel
             this.dependentButtons = dependentButtons;
             this.basicSettings = basicSettings;
             switchBut.Click += Switch;
+            TurnOffParser();
         }
 
         public bool webParserWorking { get; private set; } = false;
@@ -43,8 +44,17 @@ namespace CryptoAnalizerAI.ControlPanel
         public void TurnOnParser()
         {
             EnableDependantControls();
-            webParser = new BinanceWebParser(basicSettings.choosedPair);
-            webParser.onFaultOccured += FaultTurnOff;
+            try
+            {
+                webParser = new BinanceWebParser(basicSettings.choosedPair);
+                webParser.onFaultOccured += FaultTurnOff;
+            }
+            catch
+            {
+                MessageBox.Show("Browser launch error. Web module won't turn ON", "Informate", MessageBoxButtons.OK);
+                return;
+            }
+
 
             webParserWorking = true;
             switchBut.Text = "OFF";

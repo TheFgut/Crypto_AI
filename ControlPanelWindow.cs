@@ -12,15 +12,18 @@ using CryptoAnalizerAI.AI_training.dataset_loading;
 using CryptoAnalizerAI.AI_training;
 
 using CryptoAnalizerAI.settings;
+using CryptoAnalizerAI.ControlPanel;
 
 namespace CryptoAnalizerAI
 {
     public partial class ControlPanelWindow : Form
     {
-        public static BinanceWebParser webParser { get; private set; }
+        public static BinanceWebParser webParser { get { return webManager.parser; } }
         private Settings basicSettings;
         private const string basicSetSaveFileDestination = "settings\\";
         private LoaderAndSaver<Settings> settingsLoaderAndSaver;
+
+        private static WebParserManager webManager;
         public ControlPanelWindow()
         {
             //
@@ -32,31 +35,44 @@ namespace CryptoAnalizerAI
             }
             //подключение драйвера и открытие сайта валюты
             //webParser = new BinanceWebParser(basicSettings.choosedPair);
+
             InitializeComponent();
 
+            webManager = new WebParserManager(WebModuleSwitchButton,
+    new ButtonEnableSwitch[2] { new ButtonEnableSwitch(ChronometerSwitchBut), new ButtonEnableSwitch(openChronometrSettingsBut) },
+    basicSettings);
+            webManager.onClose += ChronometerTurnOFF;
         }
 
         //chronometer control
 
-        private Chronometer chronometerWindow;
+        private ChronometerWindow chronometerWindow;
         private void ChronometerSwitchBut_Click(object sender, EventArgs e)
         {
             if(chronometerWindow == null)
             {
-                chronometerWindow = new Chronometer(webParser);
+                chronometerWindow = new ChronometerWindow(webParser);
                 ChronometerSwitchBut.Text = "OFF";
                 openChronometrSettingsBut.Enabled = true;
                 ChronometerSwitchBut.BackColor = Color.Yellow;
             }
             else
             {
-                ChronometerSwitchBut.Text = "ON";
-                chronometerWindow.Close();
-                openChronometrSettingsBut.Enabled = false;
-                ChronometerSwitchBut.BackColor = Color.White;
-
-                chronometerWindow = null;
+                ChronometerTurnOFF();
             }
+        }
+
+        private void ChronometerTurnOFF()
+        {
+            ChronometerSwitchBut.Text = "ON";
+            if (chronometerWindow != null)
+            {
+                chronometerWindow.Close();
+            }
+            openChronometrSettingsBut.Enabled = false;
+            ChronometerSwitchBut.BackColor = Color.White;
+
+            chronometerWindow = null;
         }
 
 
@@ -73,10 +89,7 @@ namespace CryptoAnalizerAI
 
         private void FixedUpdate_Tick(object sender, EventArgs e)
         {
-            if (chronometerWindow != null)
-            {
-                textDisplay.Text = chronometerWindow.timer.ToString();
-            }
+
 
         }
 

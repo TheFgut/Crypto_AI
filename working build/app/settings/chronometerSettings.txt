@@ -1,0 +1,1 @@
+{"smoothInteval":15,"saveInteval":3600,"dataSaveWay":"Datasets\\","buyOrdersRecordDepth":6,"sellOrdersRecordDepth":6}

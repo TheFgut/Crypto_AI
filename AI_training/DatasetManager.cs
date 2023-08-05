@@ -46,7 +46,13 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             }
 
 
-            public int currentDataset { get; private set; } = 0;
+            public int currentDatasetNum { get; private set; } = 0;
+            public int currentDatasetID { get {
+                    if (manager.choosedDatasets.Length == 0)
+                    {
+                        return 0;
+                    }
+                    return manager.choosedDatasets[currentDatasetNum]; } }
 
             private int datasetPos = 0;
 
@@ -62,7 +68,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
                     DatasetPositionChanged?.Invoke(datasetPos);
                 } 
             }
-            public int currentDatasetLength { get { return manager.datasets[currentDataset].data.Length; } }
+            public int currentDatasetLength { get { return manager.datasets[currentDatasetNum].data.Length; } }
 
 
             public event DataWalkerEvent datasetChanged;
@@ -73,7 +79,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
 
             public Interval[] Walk(int needInputDataElements, int needOutputDataElements, out Interval[] outputDataElements, int step = 1)
             {
-                Dataset choosed = manager.datasets[manager.choosedDatasets[currentDataset]];
+                Dataset choosed = manager.datasets[manager.choosedDatasets[currentDatasetNum]];
                 if (posInDataset + needInputDataElements + needOutputDataElements >= choosed.data.Length)
                 {
                     loopPreventionCounter++;
@@ -115,10 +121,10 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             private void MoveToNextDataset(int dataMovingStep)
             {
                 posInDataset = 0;
-                currentDataset++;
-                if(currentDataset >= manager.choosedDatasets.Length)
+                currentDatasetNum++;
+                if(currentDatasetNum >= manager.choosedDatasets.Length)
                 {
-                    currentDataset = 0;
+                    currentDatasetNum = 0;
                 }
 
                 stepDrag++;

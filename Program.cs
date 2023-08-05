@@ -17,7 +17,7 @@ namespace CryptoAnalizerAI
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ControlPanel());
+            Application.Run(new ControlPanelWindow());
         }
     }
 }
