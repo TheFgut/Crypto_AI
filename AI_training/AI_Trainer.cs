@@ -18,6 +18,8 @@ namespace CryptoAnalizerAI.AI_training
         private BasicLearningSettings basicSettings;
         private TrainerControllingButtons controllingButtons;
         public DatasetManager datasetManager { get; private set; }
+
+
         public AI_Trainer(BasicLearningSettings basicSettings, DatasetManager datasetManager)
         {
  
@@ -52,6 +54,7 @@ namespace CryptoAnalizerAI.AI_training
 
         //training
         private BackgroundWorker threadToWork;
+        public event stateChangeEvent onTrainingStart;
         public void StartTraining()
         {
             if(threadToWork == null)
@@ -59,6 +62,7 @@ namespace CryptoAnalizerAI.AI_training
                 threadToWork = new BackgroundWorker();
                 threadToWork.DoWork += Training;
                 threadToWork.RunWorkerAsync();
+                onTrainingStart?.Invoke();
             }
 
             trainingPending = true;
@@ -129,17 +133,19 @@ namespace CryptoAnalizerAI.AI_training
 
             basicSettings.ActivateButtons();
         }
-
+        public event stateChangeEvent onTrainingEnd;
         public void StopTraning()
         {
             if (threadToWork != null)
             {
                 threadToWork.Dispose();
             }
+            onTrainingEnd?.Invoke();
             trainingPending = false;
             basicSettings.ActivateButtons();
         }
 
         public delegate void predictionDelegate(float[] prediction , float[] realCourse);
+        public delegate void stateChangeEvent();
     }
 }
