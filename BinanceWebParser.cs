@@ -12,6 +12,7 @@ namespace CryptoAnalizerAI
     {
 
         private IWebDriver driver { get; set; }
+        public CryptoPair pair { get; private set; }
 
         public event faultDelegate onFaultOccured;
         public BinanceWebParser(CryptoPair pair)
@@ -20,7 +21,7 @@ namespace CryptoAnalizerAI
             driver = new EdgeDriver(System.IO.Directory.GetCurrentDirectory() + @"\EdgeDriver");
             driver.Manage().Window.Maximize();
             driver.Url = url;
-
+            this.pair = pair;
         }
 
 

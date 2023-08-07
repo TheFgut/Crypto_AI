@@ -7,6 +7,7 @@ using System.ComponentModel;
 using CryptoAnalizerAI.AI_training.learning_settings;
 using CryptoAnalizerAI.AI_training.dataset_loading;
 using System.Threading;
+using CryptoAnalizerAI.AI_training.CustomDatasets;
 
 namespace CryptoAnalizerAI.AI_training
 {

@@ -90,8 +90,6 @@ namespace CryptoAnalizerAI
             this.Name = "ChronometerWindow";
             this.Text = "Chronometer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Chronometer_FormClosing);
-            this.Load += new System.EventHandler(this.Chronometer_Load);
-            this.Shown += new System.EventHandler(this.Chronometer_Shown);
             this.VisibleChanged += new System.EventHandler(this.ChronometerWindow_VisibleChanged);
             this.ResumeLayout(false);
             this.PerformLayout();

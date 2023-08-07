@@ -13,21 +13,26 @@ using CryptoAnalizerAI.AI_training;
 
 using CryptoAnalizerAI.settings;
 using CryptoAnalizerAI.ControlPanel;
+using System.IO;
+using CryptoAnalizerAI.AI_training.CustomDatasets;
 
 namespace CryptoAnalizerAI
 {
     public partial class ControlPanelWindow : Form
     {
-        public static BinanceWebParser webParser { get { return webManager.parser; } }
+        public static BinanceWebParser webParser { get { return WebParserManager.webParser; } }
         private Settings basicSettings;
-        private const string basicSetSaveFileDestination = "settings\\";
+        private const string basicSetSaveFileDestination = "settings";
         private LoaderAndSaver<Settings> settingsLoaderAndSaver;
 
         private static WebParserManager webManager;
         public ControlPanelWindow()
         {
             //
-            settingsLoaderAndSaver = new LoaderAndSaver<Settings>(basicSetSaveFileDestination, "basicSettings.txt");
+            //LoaderAndSaver<DatasetInfo> l = new LoaderAndSaver<DatasetInfo>(Directory.GetCurrentDirectory() + "\\Datasets", "info.txt");
+            //l.Save(new DatasetInfo());
+
+            settingsLoaderAndSaver = new LoaderAndSaver<Settings>(Directory.GetCurrentDirectory() + "\\" + basicSetSaveFileDestination, "basicSettings.txt");
             basicSettings = settingsLoaderAndSaver.loadObject();
             if (basicSettings == null)
             {

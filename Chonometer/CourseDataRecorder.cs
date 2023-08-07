@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using CryptoAnalizerAI.AI_training;
+using CryptoAnalizerAI.AI_training.CustomDatasets;
 
 namespace CryptoAnalizerAI.Chonometer
 {
@@ -12,12 +11,19 @@ namespace CryptoAnalizerAI.Chonometer
         public CourseDataRecorder(ChronometerSettings settings)
         {
             this.settings = settings;
+
+            StartRecording();
+        }
+
+        public void StartRecording()
+        {
             InitFolderName();
             buyOrdersSum = new float[settings.buyOrdersRecordDepth];
             sellOrdersSum = new float[settings.sellOrdersRecordDepth];
         }
 
-        private DateTime datasetRecordDate;
+        private DateTime datasetStartRecordDateTime;
+        private DateTime datasetEndRecordDateTime;
         private float recordFullTime;
         private float courseSum;
         private float[] buyOrdersSum;
@@ -115,7 +121,7 @@ namespace CryptoAnalizerAI.Chonometer
             {
                 Directory.CreateDirectory(filePath);
             }
-            datasetRecordDate = DateTime.Today;
+            datasetStartRecordDateTime = DateTime.Today;
             folderName = DateTime.Today.Day  + "." + DateTime.Today.Month + "." + DateTime.Today.Year + " " + DateTime.Now.Hour + "h" + DateTime.Now.Minute + "m";
             string newFolderPath = filePath + "\\" + folderName;
             if (!Directory.Exists(newFolderPath))
@@ -123,11 +129,11 @@ namespace CryptoAnalizerAI.Chonometer
                 Directory.CreateDirectory(newFolderPath);
             }
         }
-        private int recordingsInPack = 0;
+
         private List<float> averageCourses = new List<float>();
         public void saveData(bool final = false)
         {
-            string packPath = Path.Combine(Directory.GetCurrentDirectory(), settings.dataSaveWay) + "\\" + folderName;
+            string packPath = Path.Combine(Directory.GetCurrentDirectory(), settings.dataSaveWay) + folderName;
 
             string fullPath = Path.Combine(packPath, "M" + DateTime.Today.Month + "D" + DateTime.Today.Day + "H" + DateTime.Now.Hour
                 + "M" + DateTime.Now.Minute + "per-" + (int)settings.saveInteval + ".txt");
@@ -162,16 +168,11 @@ namespace CryptoAnalizerAI.Chonometer
             {
                 MakePackStatsFile(packPath);
             }
-            else
-            {
-                recordingsInPack++;
-            }
+
         }
 
         private void MakePackStatsFile(string packPath)
         {
-            string fullPath = Path.Combine(packPath,  "packInfo.txt");
-            StreamWriter sw = File.CreateText(fullPath);
 
             float min = float.MaxValue;
             float max = float.MinValue;
@@ -184,9 +185,15 @@ namespace CryptoAnalizerAI.Chonometer
             }
             avg /= averageCourses.Count;
 
-            sw.WriteLine(min + " " + max + " " + avg.ToString());
-            sw.WriteLine(datasetRecordDate.ToString());
-            sw.Close();
+            datasetEndRecordDateTime = DateTime.Now;
+            TimeSpan recordingDuration = datasetEndRecordDateTime.Subtract(datasetStartRecordDateTime);
+
+            DatasetInfo datasetInfoFile = new DatasetInfo(recordingDuration,datasetStartRecordDateTime,datasetEndRecordDateTime,
+                avg, min, max, settings.pair);
+
+            LoaderAndSaver<DatasetInfo> infoFilesaver = new LoaderAndSaver<DatasetInfo>(packPath, "packInfo.txt");
+            infoFilesaver.Save(datasetInfoFile);
+
         }
 
         private float getAverageCourse(List<Interval> intervals)

@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CryptoAnalizerAI.AI_training;
 using System.IO;
+using CryptoAnalizerAI.AI_training.CustomDatasets;
 
 namespace CryptoAnalizerAI.AI_training.dataset_loading
 {

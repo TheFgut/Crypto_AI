@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-using CryptoAnalizerAI.AI_training.dataset_loading;
+using CryptoAnalizerAI.AI_training.CustomDatasets;
 
 namespace CryptoAnalizerAI.AI_training
 {

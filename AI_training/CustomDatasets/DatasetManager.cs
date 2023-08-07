@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CryptoAnalizerAI.AI_training.dataset_loading
+namespace CryptoAnalizerAI.AI_training.CustomDatasets
 {
     public class DatasetManager
     {

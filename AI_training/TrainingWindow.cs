@@ -9,6 +9,7 @@ using CryptoAnalizerAI.AI_training.dataset_loading;
 using CryptoAnalizerAI.AI_training.learning_settings;
 using CryptoAnalizerAI.AI_training.AI_Perceptron;
 using System.Threading;
+using CryptoAnalizerAI.AI_training.CustomDatasets;
 
 namespace CryptoAnalizerAI.AI_training
 {

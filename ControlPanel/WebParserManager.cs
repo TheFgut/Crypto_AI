@@ -17,7 +17,7 @@ namespace CryptoAnalizerAI.ControlPanel
         public event closingEvent onClose;
 
         private Settings basicSettings;
-        public BinanceWebParser parser { get; private set; }
+
         public WebParserManager(Button switchBut, ButtonEnableSwitch[] dependentButtons, Settings basicSettings)
         {
             this.switchBut = switchBut;

@@ -4,6 +4,7 @@ using System.Text;
 using CryptoAnalizerAI.AI_training;
 using System.IO;
 using System.Linq;
+using CryptoAnalizerAI.AI_training.CustomDatasets;
 
 namespace CryptoAnalizerAI.AI_training.dataset_loading
 {
@@ -17,8 +18,10 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             brokenFiles = 0;
 
             //reading dataset info file
-            float average;
-            getDatasetSettings(infoFileDPath, out average);
+            DatasetInfo datasetInfo;
+
+            getDatasetSettings(infoFileDPath, out datasetInfo);
+            float average = datasetInfo.averageCourse;
             //getting all probably data files
             string directory = getDirectory(infoFileDPath);
             var filesPaths = Directory.GetFiles(directory).Where(file => !file.EndsWith("packInfo.txt"));
@@ -64,22 +67,26 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             return infoFileDPath.Substring(0, infoFileDPath.Length - (splitted[splitted.Length - 1].Length + 1));
         }
 
-        private static bool getDatasetSettings(string infoFilePath, out float average)
+        private static bool getDatasetSettings(string infoFilePath, out DatasetInfo datasetInfo)
         {
-            StreamReader reader = new StreamReader(infoFilePath);
-            string content = reader.ReadLine();
-            string[] splitted = content.Split(' ');
+            string[] splitted = infoFilePath.Split('\\');
+            string infoFileName = splitted[splitted.Length - 1];
+            string infoFileDirectory = infoFilePath.Substring(0, infoFilePath.Length - (infoFileName.Length + 1));
+
+            LoaderAndSaver<DatasetInfo> datasetInfoLoader = new LoaderAndSaver<DatasetInfo>(infoFileDirectory, infoFileName);
+
             try
             {
-                average = Single.Parse(splitted[2]);
+                datasetInfo = datasetInfoLoader.loadObject();
+                return true;
             }
             catch
             {
-                average = 0;
+                datasetInfo = null;
+
                 return false;
             }
-  
-            return true;
+
         }
 
         private static Interval tryReadDataLine(string data,int buyOrdersCount, int sellOrdersCount,out int errorCode)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 
-namespace CryptoAnalizerAI.AI_training
+namespace CryptoAnalizerAI.AI_training.CustomDatasets
 {
     public class Dataset
     {

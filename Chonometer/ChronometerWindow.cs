@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CryptoAnalizerAI.Chonometer;
 using System.Threading;
+using System.IO;
 
 
 
@@ -14,7 +15,7 @@ namespace CryptoAnalizerAI
 {
     public partial class ChronometerWindow : Form
     {
-        private const string settingsLocalPath = "settings\\";
+        private const string settingsLocalPath = "settings";
 
         private ChronometerSettings settings;
         private LoaderAndSaver<ChronometerSettings> chronometerSettingsLoader;
@@ -25,11 +26,11 @@ namespace CryptoAnalizerAI
             this.webParser = webParser;
             //to do загрузка настроек
 
-            chronometerSettingsLoader = new LoaderAndSaver<ChronometerSettings>(settingsLocalPath, "chronometerSettings.txt");
+            chronometerSettingsLoader = new LoaderAndSaver<ChronometerSettings>(Directory.GetCurrentDirectory() +"\\" + settingsLocalPath, "chronometerSettings.txt");
             settings = chronometerSettingsLoader.loadObject();
             if (settings == null)
             {
-                settings = new ChronometerSettings();
+                settings = new ChronometerSettings(webParser.pair);
             }
 
             recorder = new CourseDataRecorder(settings);
@@ -87,6 +88,7 @@ namespace CryptoAnalizerAI
                 UpdateWhileVisible.Stop();
                 Hide();
             }
+
             recorder.saveData(true);
             chronometerSettingsLoader.Save(settings);
         }
@@ -94,20 +96,10 @@ namespace CryptoAnalizerAI
 
 
 
- 
-        private void Chronometer_Shown(object sender, EventArgs e)
-        {
-
-        }
         
         private void UpdateWhileVisible_Tick(object sender, EventArgs e)
         {
             timerText.Text = ((int)timer).ToString();
-        }
-
-        private void Chronometer_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void FIxedUpdateBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)

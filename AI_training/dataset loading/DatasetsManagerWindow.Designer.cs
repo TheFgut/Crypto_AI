@@ -69,7 +69,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             this.ChooseDatasetGrid.Name = "ChooseDatasetGrid";
             this.ChooseDatasetGrid.ReadOnly = true;
             this.ChooseDatasetGrid.RowTemplate.Height = 25;
-            this.ChooseDatasetGrid.Size = new System.Drawing.Size(292, 150);
+            this.ChooseDatasetGrid.Size = new System.Drawing.Size(428, 288);
             this.ChooseDatasetGrid.TabIndex = 2;
             this.ChooseDatasetGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ChooseDatasetGrid_CellClick);
             // 
@@ -78,17 +78,17 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             this.ChoosedDatasetGrid.AllowUserToAddRows = false;
             this.ChoosedDatasetGrid.AllowUserToDeleteRows = false;
             this.ChoosedDatasetGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ChoosedDatasetGrid.Location = new System.Drawing.Point(310, 42);
+            this.ChoosedDatasetGrid.Location = new System.Drawing.Point(446, 42);
             this.ChoosedDatasetGrid.Name = "ChoosedDatasetGrid";
             this.ChoosedDatasetGrid.ReadOnly = true;
             this.ChoosedDatasetGrid.RowTemplate.Height = 25;
-            this.ChoosedDatasetGrid.Size = new System.Drawing.Size(295, 150);
+            this.ChoosedDatasetGrid.Size = new System.Drawing.Size(423, 288);
             this.ChoosedDatasetGrid.TabIndex = 3;
             this.ChoosedDatasetGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ChoosedDatasetGrid_CellClick);
             // 
             // choosedDatasetInfo
             // 
-            this.choosedDatasetInfo.Location = new System.Drawing.Point(611, 42);
+            this.choosedDatasetInfo.Location = new System.Drawing.Point(875, 42);
             this.choosedDatasetInfo.Name = "choosedDatasetInfo";
             this.choosedDatasetInfo.ReadOnly = true;
             this.choosedDatasetInfo.Size = new System.Drawing.Size(177, 121);
@@ -98,7 +98,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             // choosedLabelText
             // 
             this.choosedLabelText.AutoSize = true;
-            this.choosedLabelText.Location = new System.Drawing.Point(656, 16);
+            this.choosedLabelText.Location = new System.Drawing.Point(918, 16);
             this.choosedLabelText.Name = "choosedLabelText";
             this.choosedLabelText.Size = new System.Drawing.Size(95, 15);
             this.choosedLabelText.TabIndex = 5;
@@ -107,7 +107,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             // DatasetSetupButton
             // 
             this.DatasetSetupButton.Enabled = false;
-            this.DatasetSetupButton.Location = new System.Drawing.Point(611, 169);
+            this.DatasetSetupButton.Location = new System.Drawing.Point(875, 169);
             this.DatasetSetupButton.Name = "DatasetSetupButton";
             this.DatasetSetupButton.Size = new System.Drawing.Size(80, 23);
             this.DatasetSetupButton.TabIndex = 6;
@@ -119,7 +119,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             // 
             this.DatasetRemoveButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.DatasetRemoveButton.Enabled = false;
-            this.DatasetRemoveButton.Location = new System.Drawing.Point(713, 169);
+            this.DatasetRemoveButton.Location = new System.Drawing.Point(977, 169);
             this.DatasetRemoveButton.Name = "DatasetRemoveButton";
             this.DatasetRemoveButton.Size = new System.Drawing.Size(75, 23);
             this.DatasetRemoveButton.TabIndex = 7;
@@ -127,11 +127,11 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             this.DatasetRemoveButton.UseVisualStyleBackColor = false;
             this.DatasetRemoveButton.Click += new System.EventHandler(this.DatasetRemoveButton_Click);
             // 
-            // DatasetsManager
+            // DatasetsManagerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1073, 343);
             this.Controls.Add(this.DatasetRemoveButton);
             this.Controls.Add(this.DatasetSetupButton);
             this.Controls.Add(this.choosedLabelText);
@@ -140,7 +140,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             this.Controls.Add(this.ChooseDatasetGrid);
             this.Controls.Add(this.choosedDirectoryDispPath);
             this.Controls.Add(this.chooseDatasetsDirectory);
-            this.Name = "DatasetsManager";
+            this.Name = "DatasetsManagerWindow";
             this.Text = "DatasetsManager";
             ((System.ComponentModel.ISupportInitialize)(this.ChooseDatasetGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ChoosedDatasetGrid)).EndInit();

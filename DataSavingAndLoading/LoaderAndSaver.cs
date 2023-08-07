@@ -13,10 +13,9 @@ namespace CryptoAnalizerAI
         private string saveFileName;
         public LoaderAndSaver(string saveDestination, string saveFileName)
         {
-            this.saveDestination = Directory.GetCurrentDirectory() + "\\" + saveDestination;
+            this.saveDestination = saveDestination;
             this.saveFileName = saveFileName;
         }
-
 
         public void Save(T objectToSave)
         {
@@ -29,9 +28,10 @@ namespace CryptoAnalizerAI
 
             string path = Path.Combine(saveDestination, saveFileName);
             StreamWriter writer = new StreamWriter(path, false, System.Text.Encoding.Default);
-            
+
             writer.WriteLine(json);
             writer.Close();
+
         }
 
         public T loadObject()

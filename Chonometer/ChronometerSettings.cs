@@ -12,18 +12,23 @@ namespace CryptoAnalizerAI.Chonometer
         public int buyOrdersRecordDepth { get; set; }
         public int sellOrdersRecordDepth { get; set; }
 
-
-        public ChronometerSettings()
+        public CryptoPair pair { get; set; }
+        public ChronometerSettings(CryptoPair pair)
         {
             smoothInteval = 15;
             saveInteval = 3600;
             dataSaveWay = "Datasets\\";
             buyOrdersRecordDepth = 6;
             sellOrdersRecordDepth = 6;
+            this.pair = pair;
 
         }
 
+        public ChronometerSettings()
+        {
 
+
+        }
 
     }
 }
