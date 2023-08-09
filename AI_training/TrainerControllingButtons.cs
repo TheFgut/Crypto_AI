@@ -12,8 +12,8 @@ namespace CryptoAnalizerAI.AI_training
         private Button startButton;
         private Button stopButton;
 
-        private AI_Trainer trainer;
-        public TrainerControllingButtons(Button startButton, Button stopButton, AI_Trainer trainer)
+        private manual_AI_Trainer trainer;
+        public TrainerControllingButtons(Button startButton, Button stopButton, manual_AI_Trainer trainer)
         {
             this.startButton = startButton;
             startButton.Click += StartLearningButton_Click;

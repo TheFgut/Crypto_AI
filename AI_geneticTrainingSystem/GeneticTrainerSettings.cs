@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CryptoAnalizerAI.AI_training.AI_Perceptron
+namespace CryptoAnalizerAI.AI_geneticTrainingSystem
 {
-    class AI_module
+    class GeneticTrainerSettings
     {
     }
 }

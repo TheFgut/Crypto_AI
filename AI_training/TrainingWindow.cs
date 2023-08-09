@@ -17,7 +17,7 @@ namespace CryptoAnalizerAI.AI_training
     {
         private BasicLearningSettings learningSettings;
         private TrainerControllingButtons trainerControls;
-        private AI_Trainer trainer;
+        private manual_AI_Trainer trainer;
         private DatasetManager datasetsManager;
         private TrainingVisualizer visualizer;
         public TrainingWindow()
@@ -25,7 +25,7 @@ namespace CryptoAnalizerAI.AI_training
             InitializeComponent();
             datasetsManager = new DatasetManager();
             learningSettings = new BasicLearningSettings(learningSpeedText, learningStepText, DelayBetweenLearnsBox);
-            trainer = new AI_Trainer(learningSettings, datasetsManager);
+            trainer = new manual_AI_Trainer(learningSettings, datasetsManager);
             trainerControls = new TrainerControllingButtons(StartLearningButton, StopLearningButton, trainer);
 
             visualizer = new TrainingVisualizer(PredictionGraphic, averageErrorDisp, highestError, learnPosGraphic, trainer);
@@ -84,7 +84,7 @@ namespace CryptoAnalizerAI.AI_training
             else
             {
                 loadedDataDetailsText.Text = "Loaded " + datasetsManager.datasets.Length + "datasets" + "\n"
-                 + "Choosed " + DatasetsManagerWindow.choosedDatasets.Count + "datasets";
+                 + "Choosed " + datasetManager.choosedDatasets.Count + "datasets";
             }
 
         }

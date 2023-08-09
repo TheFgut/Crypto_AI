@@ -31,14 +31,22 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
         {
             this.chooseDatasetsDirectory = new System.Windows.Forms.Button();
             this.choosedDirectoryDispPath = new System.Windows.Forms.TextBox();
-            this.ChooseDatasetGrid = new System.Windows.Forms.DataGridView();
-            this.ChoosedDatasetGrid = new System.Windows.Forms.DataGridView();
+            this.ChooseLearnDatasetGrid = new System.Windows.Forms.DataGridView();
+            this.ChoosedLearnDatasetGrid = new System.Windows.Forms.DataGridView();
             this.choosedDatasetInfo = new System.Windows.Forms.RichTextBox();
             this.choosedLabelText = new System.Windows.Forms.Label();
-            this.DatasetSetupButton = new System.Windows.Forms.Button();
-            this.DatasetRemoveButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.ChooseDatasetGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ChoosedDatasetGrid)).BeginInit();
+            this.LearnDatasetSetupButton = new System.Windows.Forms.Button();
+            this.LearnDatasetRemoveButton = new System.Windows.Forms.Button();
+            this.ChooseCheckDatasetGrid = new System.Windows.Forms.DataGridView();
+            this.ChoosedCheckDatasetGrid = new System.Windows.Forms.DataGridView();
+            this.TestDatasetsGroup = new System.Windows.Forms.GroupBox();
+            this.TestDatasetRemoveButton = new System.Windows.Forms.Button();
+            this.testDatasetSetupButton = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.ChooseLearnDatasetGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChoosedLearnDatasetGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChooseCheckDatasetGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChoosedCheckDatasetGrid)).BeginInit();
+            this.TestDatasetsGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // chooseDatasetsDirectory
@@ -60,31 +68,29 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             this.choosedDirectoryDispPath.Size = new System.Drawing.Size(154, 23);
             this.choosedDirectoryDispPath.TabIndex = 1;
             // 
-            // ChooseDatasetGrid
+            // ChooseLearnDatasetGrid
             // 
-            this.ChooseDatasetGrid.AllowUserToAddRows = false;
-            this.ChooseDatasetGrid.AllowUserToDeleteRows = false;
-            this.ChooseDatasetGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ChooseDatasetGrid.Location = new System.Drawing.Point(12, 42);
-            this.ChooseDatasetGrid.Name = "ChooseDatasetGrid";
-            this.ChooseDatasetGrid.ReadOnly = true;
-            this.ChooseDatasetGrid.RowTemplate.Height = 25;
-            this.ChooseDatasetGrid.Size = new System.Drawing.Size(428, 288);
-            this.ChooseDatasetGrid.TabIndex = 2;
-            this.ChooseDatasetGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ChooseDatasetGrid_CellClick);
+            this.ChooseLearnDatasetGrid.AllowUserToAddRows = false;
+            this.ChooseLearnDatasetGrid.AllowUserToDeleteRows = false;
+            this.ChooseLearnDatasetGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ChooseLearnDatasetGrid.Location = new System.Drawing.Point(29, 42);
+            this.ChooseLearnDatasetGrid.Name = "ChooseLearnDatasetGrid";
+            this.ChooseLearnDatasetGrid.ReadOnly = true;
+            this.ChooseLearnDatasetGrid.RowTemplate.Height = 25;
+            this.ChooseLearnDatasetGrid.Size = new System.Drawing.Size(411, 288);
+            this.ChooseLearnDatasetGrid.TabIndex = 2;
             // 
-            // ChoosedDatasetGrid
+            // ChoosedLearnDatasetGrid
             // 
-            this.ChoosedDatasetGrid.AllowUserToAddRows = false;
-            this.ChoosedDatasetGrid.AllowUserToDeleteRows = false;
-            this.ChoosedDatasetGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ChoosedDatasetGrid.Location = new System.Drawing.Point(446, 42);
-            this.ChoosedDatasetGrid.Name = "ChoosedDatasetGrid";
-            this.ChoosedDatasetGrid.ReadOnly = true;
-            this.ChoosedDatasetGrid.RowTemplate.Height = 25;
-            this.ChoosedDatasetGrid.Size = new System.Drawing.Size(423, 288);
-            this.ChoosedDatasetGrid.TabIndex = 3;
-            this.ChoosedDatasetGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ChoosedDatasetGrid_CellClick);
+            this.ChoosedLearnDatasetGrid.AllowUserToAddRows = false;
+            this.ChoosedLearnDatasetGrid.AllowUserToDeleteRows = false;
+            this.ChoosedLearnDatasetGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ChoosedLearnDatasetGrid.Location = new System.Drawing.Point(446, 42);
+            this.ChoosedLearnDatasetGrid.Name = "ChoosedLearnDatasetGrid";
+            this.ChoosedLearnDatasetGrid.ReadOnly = true;
+            this.ChoosedLearnDatasetGrid.RowTemplate.Height = 25;
+            this.ChoosedLearnDatasetGrid.Size = new System.Drawing.Size(423, 288);
+            this.ChoosedLearnDatasetGrid.TabIndex = 3;
             // 
             // choosedDatasetInfo
             // 
@@ -104,46 +110,104 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             this.choosedLabelText.TabIndex = 5;
             this.choosedLabelText.Text = "Choosed dataset";
             // 
-            // DatasetSetupButton
+            // LearnDatasetSetupButton
             // 
-            this.DatasetSetupButton.Enabled = false;
-            this.DatasetSetupButton.Location = new System.Drawing.Point(875, 169);
-            this.DatasetSetupButton.Name = "DatasetSetupButton";
-            this.DatasetSetupButton.Size = new System.Drawing.Size(80, 23);
-            this.DatasetSetupButton.TabIndex = 6;
-            this.DatasetSetupButton.Text = "Setup";
-            this.DatasetSetupButton.UseVisualStyleBackColor = true;
-            this.DatasetSetupButton.Click += new System.EventHandler(this.DatasetSetupButton_Click);
+            this.LearnDatasetSetupButton.Enabled = false;
+            this.LearnDatasetSetupButton.Location = new System.Drawing.Point(875, 169);
+            this.LearnDatasetSetupButton.Name = "LearnDatasetSetupButton";
+            this.LearnDatasetSetupButton.Size = new System.Drawing.Size(80, 23);
+            this.LearnDatasetSetupButton.TabIndex = 6;
+            this.LearnDatasetSetupButton.Text = "Setup";
+            this.LearnDatasetSetupButton.UseVisualStyleBackColor = true;
             // 
-            // DatasetRemoveButton
+            // LearnDatasetRemoveButton
             // 
-            this.DatasetRemoveButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.DatasetRemoveButton.Enabled = false;
-            this.DatasetRemoveButton.Location = new System.Drawing.Point(977, 169);
-            this.DatasetRemoveButton.Name = "DatasetRemoveButton";
-            this.DatasetRemoveButton.Size = new System.Drawing.Size(75, 23);
-            this.DatasetRemoveButton.TabIndex = 7;
-            this.DatasetRemoveButton.Text = "Remove";
-            this.DatasetRemoveButton.UseVisualStyleBackColor = false;
-            this.DatasetRemoveButton.Click += new System.EventHandler(this.DatasetRemoveButton_Click);
+            this.LearnDatasetRemoveButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.LearnDatasetRemoveButton.Enabled = false;
+            this.LearnDatasetRemoveButton.Location = new System.Drawing.Point(977, 169);
+            this.LearnDatasetRemoveButton.Name = "LearnDatasetRemoveButton";
+            this.LearnDatasetRemoveButton.Size = new System.Drawing.Size(75, 23);
+            this.LearnDatasetRemoveButton.TabIndex = 7;
+            this.LearnDatasetRemoveButton.Text = "Remove";
+            this.LearnDatasetRemoveButton.UseVisualStyleBackColor = false;
+            // 
+            // ChooseCheckDatasetGrid
+            // 
+            this.ChooseCheckDatasetGrid.AllowUserToAddRows = false;
+            this.ChooseCheckDatasetGrid.AllowUserToDeleteRows = false;
+            this.ChooseCheckDatasetGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ChooseCheckDatasetGrid.Location = new System.Drawing.Point(17, 22);
+            this.ChooseCheckDatasetGrid.Name = "ChooseCheckDatasetGrid";
+            this.ChooseCheckDatasetGrid.RowTemplate.Height = 25;
+            this.ChooseCheckDatasetGrid.Size = new System.Drawing.Size(411, 266);
+            this.ChooseCheckDatasetGrid.TabIndex = 8;
+            // 
+            // ChoosedCheckDatasetGrid
+            // 
+            this.ChoosedCheckDatasetGrid.AllowUserToAddRows = false;
+            this.ChoosedCheckDatasetGrid.AllowUserToDeleteRows = false;
+            this.ChoosedCheckDatasetGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ChoosedCheckDatasetGrid.Location = new System.Drawing.Point(434, 22);
+            this.ChoosedCheckDatasetGrid.Name = "ChoosedCheckDatasetGrid";
+            this.ChoosedCheckDatasetGrid.RowTemplate.Height = 25;
+            this.ChoosedCheckDatasetGrid.Size = new System.Drawing.Size(423, 266);
+            this.ChoosedCheckDatasetGrid.TabIndex = 9;
+            // 
+            // TestDatasetsGroup
+            // 
+            this.TestDatasetsGroup.Controls.Add(this.TestDatasetRemoveButton);
+            this.TestDatasetsGroup.Controls.Add(this.testDatasetSetupButton);
+            this.TestDatasetsGroup.Controls.Add(this.ChooseCheckDatasetGrid);
+            this.TestDatasetsGroup.Controls.Add(this.ChoosedCheckDatasetGrid);
+            this.TestDatasetsGroup.Location = new System.Drawing.Point(12, 336);
+            this.TestDatasetsGroup.Name = "TestDatasetsGroup";
+            this.TestDatasetsGroup.Size = new System.Drawing.Size(1058, 294);
+            this.TestDatasetsGroup.TabIndex = 10;
+            this.TestDatasetsGroup.TabStop = false;
+            this.TestDatasetsGroup.Text = "test datasets";
+            // 
+            // TestDatasetRemoveButton
+            // 
+            this.TestDatasetRemoveButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.TestDatasetRemoveButton.Enabled = false;
+            this.TestDatasetRemoveButton.Location = new System.Drawing.Point(965, 200);
+            this.TestDatasetRemoveButton.Name = "TestDatasetRemoveButton";
+            this.TestDatasetRemoveButton.Size = new System.Drawing.Size(75, 23);
+            this.TestDatasetRemoveButton.TabIndex = 11;
+            this.TestDatasetRemoveButton.Text = "Remove";
+            this.TestDatasetRemoveButton.UseVisualStyleBackColor = false;
+            // 
+            // testDatasetSetupButton
+            // 
+            this.testDatasetSetupButton.Enabled = false;
+            this.testDatasetSetupButton.Location = new System.Drawing.Point(868, 201);
+            this.testDatasetSetupButton.Name = "testDatasetSetupButton";
+            this.testDatasetSetupButton.Size = new System.Drawing.Size(75, 23);
+            this.testDatasetSetupButton.TabIndex = 10;
+            this.testDatasetSetupButton.Text = "Setup";
+            this.testDatasetSetupButton.UseVisualStyleBackColor = true;
             // 
             // DatasetsManagerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1073, 343);
-            this.Controls.Add(this.DatasetRemoveButton);
-            this.Controls.Add(this.DatasetSetupButton);
+            this.ClientSize = new System.Drawing.Size(1089, 645);
+            this.Controls.Add(this.TestDatasetsGroup);
+            this.Controls.Add(this.LearnDatasetRemoveButton);
+            this.Controls.Add(this.LearnDatasetSetupButton);
             this.Controls.Add(this.choosedLabelText);
             this.Controls.Add(this.choosedDatasetInfo);
-            this.Controls.Add(this.ChoosedDatasetGrid);
-            this.Controls.Add(this.ChooseDatasetGrid);
+            this.Controls.Add(this.ChoosedLearnDatasetGrid);
+            this.Controls.Add(this.ChooseLearnDatasetGrid);
             this.Controls.Add(this.choosedDirectoryDispPath);
             this.Controls.Add(this.chooseDatasetsDirectory);
             this.Name = "DatasetsManagerWindow";
             this.Text = "DatasetsManager";
-            ((System.ComponentModel.ISupportInitialize)(this.ChooseDatasetGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ChoosedDatasetGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChooseLearnDatasetGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChoosedLearnDatasetGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChooseCheckDatasetGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChoosedCheckDatasetGrid)).EndInit();
+            this.TestDatasetsGroup.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -153,11 +217,16 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
 
         private System.Windows.Forms.Button chooseDatasetsDirectory;
         private System.Windows.Forms.TextBox choosedDirectoryDispPath;
-        private System.Windows.Forms.DataGridView ChooseDatasetGrid;
-        private System.Windows.Forms.DataGridView ChoosedDatasetGrid;
+        private System.Windows.Forms.DataGridView ChooseLearnDatasetGrid;
+        private System.Windows.Forms.DataGridView ChoosedLearnDatasetGrid;
         private System.Windows.Forms.RichTextBox choosedDatasetInfo;
         private System.Windows.Forms.Label choosedLabelText;
-        private System.Windows.Forms.Button DatasetSetupButton;
-        private System.Windows.Forms.Button DatasetRemoveButton;
+        private System.Windows.Forms.Button LearnDatasetSetupButton;
+        private System.Windows.Forms.Button LearnDatasetRemoveButton;
+        private System.Windows.Forms.DataGridView ChooseCheckDatasetGrid;
+        private System.Windows.Forms.DataGridView ChoosedCheckDatasetGrid;
+        private System.Windows.Forms.GroupBox TestDatasetsGroup;
+        private System.Windows.Forms.Button TestDatasetRemoveButton;
+        private System.Windows.Forms.Button testDatasetSetupButton;
     }
 }

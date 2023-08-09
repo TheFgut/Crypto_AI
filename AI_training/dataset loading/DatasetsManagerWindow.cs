@@ -13,44 +13,57 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
 {
     public partial class DatasetsManagerWindow : Form
     {
-        private DataGridController loadedDataGrid;
-        private DataGridController choosedDataGrid;
-        public static List<int> choosedDatasets { get; private set; } = new List<int>();
+
+        public List<int> choosedDatasets
+        {
+            get
+            {
+                if (checkM) return testDatasetsConfigureManager.choosedDatasets;
+                return learnDatasetsConfigureManager.choosedDatasets;
+            }
+        }
+        private bool checkM = false;
+        public bool checkMode {
+            get
+            {
+                return checkM;
+            }
+            set
+            {
+                datasetConfigurationChanged?.Invoke("mode changed");
+                checkM = value;
+            }
+        }
 
         public event DatasetManagerHandler? datasetLoaded;
         public event DatasetManagerHandler? datasetConfigurationChanged;
 
         private DatasetManager manager;
+        private DatasetsConfigureManager learnDatasetsConfigureManager;
+        private DatasetsConfigureManager testDatasetsConfigureManager;
         public DatasetsManagerWindow(DatasetManager manager)
         {
             this.manager = manager;
 
             InitializeComponent();
-            DataTable dt = makeDefaultDatasetDataTable();
-            loadedDataGrid = new DataGridController(ChooseDatasetGrid, dt);
+            learnDatasetsConfigureManager = new DatasetsConfigureManager(LearnDatasetRemoveButton, LearnDatasetSetupButton,
+                ChooseLearnDatasetGrid, ChooseCheckDatasetGrid, ChoosedLearnDatasetGrid, dataChoosed);
 
-            DataTable dt1 = makeDefaultDatasetDataTable();
-            choosedDataGrid = new DataGridController(ChoosedDatasetGrid, dt1);
-
-
+            testDatasetsConfigureManager = new DatasetsConfigureManager(TestDatasetRemoveButton, testDatasetSetupButton,
+                ChooseCheckDatasetGrid, ChooseLearnDatasetGrid, ChoosedCheckDatasetGrid, dataChoosed);
 
         }
+
+        private void dataChoosed(string data)
+        {
+            datasetConfigurationChanged?.Invoke("");
+            manager.SetChoosedDatasetsInts(choosedDatasets.ToArray());
+        }
+
         //loadingDefault path datasets
         public void LoadDatasetsFromDefaultPath()
         {
             LoadDatasetsFromPath(Path.Combine(Directory.GetCurrentDirectory(), "Datasets\\"));
-        }
-
-        private DataTable makeDefaultDatasetDataTable()
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Date", typeof(DateTime));
-            dt.Columns.Add("Average", typeof(float));
-            dt.Columns.Add("Min", typeof(float));
-            dt.Columns.Add("Max", typeof(float));
-            dt.Columns.Add("ID", typeof(int));
-
-            return dt;
         }
 
         //choosing and checking directory
@@ -119,16 +132,9 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
 
         private void ShowLoadedDatasets()
         {
-            loadedDataGrid.table.Clear();
-            choosedDataGrid.table.Clear();
-
-            DataTable loadedTable = loadedDataGrid.table;
-
-            for(int i = 0; i < manager.datasets.Length; i++)
-            {
-                loadedTable.Rows.Add(new object[] {DateTime.Parse("1/1/2016"), manager.datasets[i].average, 0,0, i});
-            }
-
+            Dataset[] datasets = manager.datasets;
+            learnDatasetsConfigureManager.ShowLoadedDatasets(datasets);
+            testDatasetsConfigureManager.ShowLoadedDatasets(datasets);
         }
 
         private string[] GetDatasetsInfoFilesDirectories(string path)
@@ -147,80 +153,8 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             return settingFilesList.ToArray();
         }
 
-        private void ChooseDatasetGrid_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            int clickedIndex = e.RowIndex;
-            if (clickedIndex < 0) return;
-            int transferedDatasetID = loadedDataGrid.TransferRowTo(clickedIndex, choosedDataGrid);
-            choosedDatasets.Add(transferedDatasetID);
-            manager.SetChoosedDatasetsInts(choosedDatasets.ToArray());
-            datasetConfigurationChanged?.Invoke("+");
-        }
 
-
-
-        //choosed Dataset Editiong
-        private int choosedID = -1;
-        private int choosedRealID = 0;
-        private void ChoosedDatasetGrid_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            choosedID = e.RowIndex;
-            DatasetSetupButton.Enabled = true;
-            DatasetRemoveButton.Enabled = true;
-
-
-            choosedDatasetInfo.Text = "";
-        }
-
-        private List<DatasetSettingUp> setUpWindows = new List<DatasetSettingUp>();
-
-        private void DatasetSetupButton_Click(object sender, EventArgs e)
-        {
-            if (choosedID == -1) return;
-            
-
-
-        }
-
-        private void DatasetRemoveButton_Click(object sender, EventArgs e)
-        {
-            if (choosedID == -1) return;
-            DatasetSetupButton.Enabled = false;
-            DatasetRemoveButton.Enabled = false;
-
-            int transferedDatasetID = choosedDataGrid.TransferRowTo(choosedID, loadedDataGrid);
-            choosedDatasets.Remove(transferedDatasetID);
-            manager.SetChoosedDatasetsInts(choosedDatasets.ToArray());
-
-            choosedDatasetInfo.Text = "";
-            choosedID = -1;
-            datasetConfigurationChanged?.Invoke("-");
-        }
-
-
-
-        private class DataGridController
-        {
-            public DataTable table { get; private set; }
-            public DataGridController(DataGridView view, DataTable table)
-            {
-                this.table = table;
-                view.DataSource = table;
-            }
-
-            public int TransferRowTo(int rowID, DataGridController targetDataController)
-            {
-
-                DataRow row = table.Rows[rowID];
-                int dataRealId = (int)row.ItemArray[row.ItemArray.Length - 1];
-
-
-                DataTable table1 = targetDataController.table;
-                table1.Rows.Add(row.ItemArray);
-                table.Rows.Remove(row);
-                return dataRealId;
-            }
-        }
+        //configuration Changed
 
 
     }

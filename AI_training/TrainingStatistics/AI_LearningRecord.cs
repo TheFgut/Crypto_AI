@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CryptoAnalizerAI.AI_training.AI_Perceptron;
+using System.Text.Json.Serialization;
 
 namespace CryptoAnalizerAI.AI_training.TrainingStatistics
 {
@@ -32,10 +34,16 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
                 return -1;
             }
         }
-        public AI_LearningRecord(DatasetsRun[] learningRuns, DatasetsRun testRun)
+
+        [JsonIgnore] public Perceptron perceptron { get; private set; }
+
+        public Perceptron_SaveFile perceptronSaveFile { get; set; }
+        public AI_LearningRecord(DatasetsRun[] learningRuns, DatasetsRun testRun, Perceptron perceptron)
         {
             this.learningRuns = learningRuns;
             this.testRun = testRun;
+            this.perceptron = perceptron;
+            perceptronSaveFile = perceptron.makeSaveFile();
         }
 
 

@@ -6,7 +6,7 @@ using CryptoAnalizerAI.AI_training.learning_settings;
 
 namespace CryptoAnalizerAI.AI_training.AI_Perceptron
 {
-    public class Perceptron
+    public class Perceptron : ICloneable
     {
 
 
@@ -178,6 +178,15 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
             }
         }
 
+        public object Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Perceptron_SaveFile makeSaveFile()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

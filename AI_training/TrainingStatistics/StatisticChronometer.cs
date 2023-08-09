@@ -9,9 +9,9 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
     class StatisticChronometer
     {
         private DatasetManager datasetManager;
-        private AI_Trainer trainer;
+        private manual_AI_Trainer trainer;
 
-        public StatisticChronometer(DatasetManager datasetManager, AI_Trainer trainer)
+        public StatisticChronometer(DatasetManager datasetManager, manual_AI_Trainer trainer)
         {
             this.datasetManager = datasetManager;
             this.trainer = trainer;
@@ -56,8 +56,10 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
         private void PackStatisticRecording()
         {
             float guessFrequence = (float)guessCount / errorValues.Count;
+            runFinishedReturnGuessFrequency?.Invoke(guessFrequence);
             DatasetLearningStats learningStats = new DatasetLearningStats(errorValues.ToArray(), courseValues.ToArray(), guessFrequence);
-            
+            runFinishedReturnError?.Invoke(learningStats.averageError);
+
             neuralNetworkStats.Add(learningStats);
             ClearRecordingCache();
         }

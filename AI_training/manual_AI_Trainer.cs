@@ -11,7 +11,7 @@ using CryptoAnalizerAI.AI_training.CustomDatasets;
 
 namespace CryptoAnalizerAI.AI_training
 {
-    public class AI_Trainer
+    public class manual_AI_Trainer
     {
         private Perceptron perceptron;
         public bool trainingPending { get; private set; }
@@ -20,7 +20,7 @@ namespace CryptoAnalizerAI.AI_training
         public DatasetManager datasetManager { get; private set; }
 
 
-        public AI_Trainer(BasicLearningSettings basicSettings, DatasetManager datasetManager)
+        public manual_AI_Trainer(BasicLearningSettings basicSettings, DatasetManager datasetManager)
         {
  
             this.basicSettings = basicSettings;
@@ -34,17 +34,23 @@ namespace CryptoAnalizerAI.AI_training
             this.controllingButtons = controllingButtons;
         }
 
+        public event trainEnableChange trainingAwailbaleChange;
         public void ConnectPerceptron(Perceptron perceptron)
         {
             this.perceptron = perceptron;
             perceptron.settings.setBasicLEarnSettings(basicSettings);
-            if (isGoodConditionsForLearnong()) controllingButtons.ActivateControls();
+
+            bool trainEnabled = isGoodConditionsForLearnong();
+            if (trainEnabled) controllingButtons.ActivateControls();
+            trainingAwailbaleChange?.Invoke(trainEnabled);
         }
 
         //enabling controls
         public void DataasetsUpdated()
         {
-            if (isGoodConditionsForLearnong()) controllingButtons.ActivateControls();
+            bool trainEnabled = isGoodConditionsForLearnong();
+            if (trainEnabled) controllingButtons.ActivateControls();
+            trainingAwailbaleChange?.Invoke(trainEnabled);
         }
 
         public bool isGoodConditionsForLearnong()
@@ -147,5 +153,6 @@ namespace CryptoAnalizerAI.AI_training
 
         public delegate void predictionDelegate(float[] prediction , float[] realCourse);
         public delegate void stateChangeEvent();
+        public delegate void trainEnableChange(bool enable);
     }
 }

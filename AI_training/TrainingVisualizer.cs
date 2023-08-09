@@ -12,7 +12,7 @@ namespace CryptoAnalizerAI.AI_training
         private CurrentErrorDisplay currentError;
         private DatasetPositionDisplay positionDisp;
         private AverageAndHighestError averageAndHighestErrDisp;
-        public TrainingVisualizer(PictureBox CurrentErrorDisplayPicture,TextBox averageErrorValueBox, TextBox highestErrTextBox, PictureBox learnPosGraphic, AI_Trainer trainer)
+        public TrainingVisualizer(PictureBox CurrentErrorDisplayPicture,TextBox averageErrorValueBox, TextBox highestErrTextBox, PictureBox learnPosGraphic, manual_AI_Trainer trainer)
         {
             currentError = new CurrentErrorDisplay(CurrentErrorDisplayPicture);
             averageAndHighestErrDisp = new AverageAndHighestError(averageErrorValueBox, highestErrTextBox);
