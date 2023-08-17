@@ -13,23 +13,29 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
         private Button stopBut;
 
         private GeneticTrainer geneticTrainer;
+        private TrainerControllingButtons manual_trainer_controls;
         public ControlsButtons(Button startBut, Button stopBut, manual_AI_Trainer trainer, GeneticTrainer geneticTrainer)
         {
             this.startBut = startBut;
             this.stopBut = stopBut;
+            this.geneticTrainer = geneticTrainer;
 
+            SetEnable(trainer.isGoodConditionsForLearnong());
             trainer.trainingAwailbaleChange += SetEnable;
             startBut.BackColor = Color.Gray;
 
             startBut.Click += StartButtonClicked;
             stopBut.Click += StopButtonClicked;
 
-            SetEnable(false);
+            manual_trainer_controls = trainer.controllingButtons;
+
+ 
         }
 
         private bool enabled;
         public void SetEnable(bool enabled)
         {
+            if (trainPending) return;
             this.enabled = enabled;
 
             startBut.Enabled = enabled;
@@ -41,6 +47,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
         private bool trainPending;
         public void StartButtonClicked(object sender, EventArgs e)
         {
+            manual_trainer_controls.DeactivateControls();
             trainPending = !trainPending;
             if (trainPending)
             {
@@ -57,6 +64,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
 
         public void StopButtonClicked(object sender, EventArgs e)
         {
+            manual_trainer_controls.ActivateControls();
             geneticTrainer.StopLearning();
             ResetStartBut();
         }
@@ -66,5 +74,8 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
             startBut.Text = "Start";
             startBut.BackColor = Color.Gray;
         }
+
+
+        public delegate void multiThreadCall(bool mult);
     }
 }

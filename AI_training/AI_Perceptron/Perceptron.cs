@@ -18,6 +18,13 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
 
         private perceptronOutput transferOutput;
         private backPropagete backTransfer;
+
+        public int hiddenLayersCount { get
+            {
+                if (neurons == null) return 0;
+                return neurons.Length - 2;
+            } 
+        }
         public Perceptron(Perceptron_settings settings,
             perceptronOutput output, backPropagete back)
         {
@@ -28,11 +35,20 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
             //neuronsGenerate(settings);
         }
 
+        public bool[] bias { get; set; }
         public Perceptron(int[] layers, bool[] bias)
         {
+            this.bias = bias;
             settings = new Perceptron_settings(layers, new hyperbolicTan());
             neuronsGenerate<Neuron>(settings, bias);
             
+        }
+
+        private Perceptron(Perceptron_settings settings, bool[] bias)
+        {
+            this.bias = bias;
+            this.settings = settings;
+            neuronsGenerate<Neuron>(settings, bias);
         }
 
         private void neuronsGenerate<N>(Perceptron_settings settings, bool[] biases) where N : Neuron, new() 
@@ -178,29 +194,53 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
             }
         }
 
+
+
+
         public object Clone()
         {
-            throw new NotImplementedException();
-        }
+            //to do cloning weights values
+            Perceptron perceptron = new Perceptron((Perceptron_settings)settings.Clone(),bias);
+
+            return perceptron;
+        }        //cloning only structure
 
         public Perceptron_SaveFile makeSaveFile()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return new Perceptron_SaveFile();
         }
+
+        public override string ToString()
+        {
+            string description = "";
+            for (int i = 0; i < settings.layers.Length;i++)
+            {
+                description += "l" + i.ToString() + ":" + settings.layers[i].ToString() + " ";
+            }
+            return description;
+        }
+
     }
 
 
-
-    public class Perceptron_settings
+    public class Perceptron_settings : ICloneable
     {
         public int[] layers { get; private set; }
         public activationFunction activationFunc { get; private set; }
 
         public BasicLearningSettings basicLearnSettings { get; private set; }
 
-        public void setBasicLEarnSettings(BasicLearningSettings basicLearnSettings)
+        public void setBasicLearnSettings(BasicLearningSettings basicLearnSettings)
         {
             this.basicLearnSettings = basicLearnSettings;
+        }
+
+        public object Clone()
+        {
+            Perceptron_settings newS = new Perceptron_settings(layers, activationFunc);
+            newS.setBasicLearnSettings(basicLearnSettings);
+            return newS;
         }
 
         public Perceptron_settings(int[] layers,

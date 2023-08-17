@@ -6,29 +6,40 @@ using CryptoAnalizerAI.AI_training.TrainingStatistics;
 
 namespace CryptoAnalizerAI.AI_geneticTrainingSystem.Generator
 {
-    class Generator
+    class AI_Generator
     {
         private Operations operation;
-        public Generator()
+        public newPerc onPerceptronUpdated;
+        public AI_Generator()
         {
             operation = new Operations();
         }
         private Phase currentPhase = Phase.build_up;
         private int currentLayer = 1;
+
+        private AI_LearningRecord etalonDataset;
         public Perceptron UpdatePerceptron(AI_LearningRecord currendRun, AI_LearningRecord previousRun)
         {
+
             //to do check neural update made better
             bool newIsBetter;
-
+            Perceptron updated;
             switch (currentPhase)
             {
                 case Phase.build_up:
                     newIsBetter = (previousRun.finalError / currendRun.finalError) - 1 > 0.0005f;//if better than previous more than 0.5 percent
-                    return Build_Up(currendRun, previousRun, newIsBetter);
+                    updated = Build_Up(currendRun, previousRun, newIsBetter);
+                    onPerceptronUpdated?.Invoke(updated);
+
+                    etalonDataset = currendRun;
+
+                    return updated;
 
                 case Phase.optimization:
-                    newIsBetter = (previousRun.finalError / currendRun.finalError) - 1 > -0.0005f;//if not worse than previous more than 0.5 percent
-                    return Optimization(currendRun, previousRun, newIsBetter);
+                    newIsBetter = (etalonDataset.finalError / currendRun.finalError) < 1.00025f;//if not worse than previous more than 0.25 percent
+                    updated = Optimization(currendRun, previousRun, newIsBetter);
+                    onPerceptronUpdated?.Invoke(updated);
+                    return updated;
 
             }
 
@@ -78,6 +89,13 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem.Generator
             if (newIsBetter)
             {
                 perceptron = (Perceptron)currendRun.perceptron.Clone();
+                if (currendRun.perceptron.settings.layers[currentLayer] <= 1)
+                {
+                    ChangePhase(Phase.build_up);
+                    perceptron = operation.addLayer(perceptron);
+                    return Build_Up(currendRun, previousRun, newIsBetter);
+                }
+     
                 perceptron = operation.removeNeurons(currentLayer, perceptron);
                 return perceptron;
             }
@@ -110,5 +128,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem.Generator
             build_up,
             optimization
         }
+
+        public delegate void newPerc(Perceptron newP);
     }
 }

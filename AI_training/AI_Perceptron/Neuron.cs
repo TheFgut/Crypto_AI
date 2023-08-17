@@ -188,6 +188,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
 
             public override float output { get { return rN.memoryOutput; } }
         }
+
     }
 
     public class Bias : Neuron

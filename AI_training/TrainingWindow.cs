@@ -10,6 +10,7 @@ using CryptoAnalizerAI.AI_training.learning_settings;
 using CryptoAnalizerAI.AI_training.AI_Perceptron;
 using System.Threading;
 using CryptoAnalizerAI.AI_training.CustomDatasets;
+using CryptoAnalizerAI.AI_geneticTrainingSystem;
 
 namespace CryptoAnalizerAI.AI_training
 {
@@ -23,10 +24,11 @@ namespace CryptoAnalizerAI.AI_training
         public TrainingWindow()
         {
             InitializeComponent();
-            datasetsManager = new DatasetManager();
-            learningSettings = new BasicLearningSettings(learningSpeedText, learningStepText, DelayBetweenLearnsBox);
+
+            learningSettings = new BasicLearningSettings(learningSpeedText, learningStepText, DelayBetweenLearnsBox, learningRunsTextBox, CheckRunCheckBox, this);
+            datasetsManager = new DatasetManager(learningSettings);
             trainer = new manual_AI_Trainer(learningSettings, datasetsManager);
-            trainerControls = new TrainerControllingButtons(StartLearningButton, StopLearningButton, trainer);
+            trainerControls = new TrainerControllingButtons(StartLearningButton, StopLearningButton, trainer, this);
 
             visualizer = new TrainingVisualizer(PredictionGraphic, averageErrorDisp, highestError, learnPosGraphic, trainer);
 
@@ -121,5 +123,24 @@ namespace CryptoAnalizerAI.AI_training
 
             Thread.Sleep(100);
         }
+
+        private GeneticTrainerSettingUpWindow automaticTrainingWindow;
+        private void AutomaticTrainingBut_Click(object sender, EventArgs e)
+        {
+            if(automaticTrainingWindow == null)
+            {
+                automaticTrainingWindow = new GeneticTrainerSettingUpWindow(datasetsManager,trainer);
+                automaticTrainingWindow.FormClosed += AutomaticTrainingWindowClosed;
+                automaticTrainingWindow.Show();
+            }
+        }
+
+        private void AutomaticTrainingWindowClosed(object sender, EventArgs e)
+        {
+            automaticTrainingWindow.FormClosed -= AutomaticTrainingWindowClosed;
+            automaticTrainingWindow = null;
+        }
+
+
     }
 }

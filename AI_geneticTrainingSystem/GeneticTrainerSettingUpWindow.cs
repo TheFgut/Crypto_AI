@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using CryptoAnalizerAI.AI_training;
 using CryptoAnalizerAI.AI_training.CustomDatasets;
+using CryptoAnalizerAI.AI_geneticTrainingSystem.UI;
 
 
 namespace CryptoAnalizerAI.AI_geneticTrainingSystem
@@ -14,9 +15,11 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
     public partial class GeneticTrainerSettingUpWindow : Form
     {
 
-
+        private NeuralN_Info neuralInfoUI;
         private GeneticTrainer geneticTrainer;
         private ControlsButtons controlButtons;
+
+        private LearnRecordingsTable recordTable;
         public GeneticTrainerSettingUpWindow(DatasetManager datasetManager, manual_AI_Trainer trainer)
         {
 
@@ -26,7 +29,9 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
             geneticTrainer = new GeneticTrainer(datasetManager, trainer, trainerSettings);
             controlButtons = new ControlsButtons(TrainingStartBut, TrainingStopBut, trainer, geneticTrainer);
 
+            neuralInfoUI = new NeuralN_Info(neuralInfoText,updateNumDisp, geneticTrainer.generator, this);
 
+            recordTable = new LearnRecordingsTable(TrainedAIDataGridView, geneticTrainer, this);
         }
 
 

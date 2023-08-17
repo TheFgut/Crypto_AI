@@ -56,6 +56,10 @@ namespace CryptoAnalizerAI.AI_training
             this.PredictionGraphic = new System.Windows.Forms.PictureBox();
             this.averageErrorDisp = new System.Windows.Forms.TextBox();
             this.highestError = new System.Windows.Forms.TextBox();
+            this.AutomaticTrainingBut = new System.Windows.Forms.Button();
+            this.learningRunsTextBox = new System.Windows.Forms.TextBox();
+            this.learningRunsLabel = new System.Windows.Forms.Label();
+            this.CheckRunCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.learnPosGraphic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.AIprediction)).BeginInit();
             this.learningParamsGroupBox.SuspendLayout();
@@ -99,6 +103,9 @@ namespace CryptoAnalizerAI.AI_training
             // 
             // learningParamsGroupBox
             // 
+            this.learningParamsGroupBox.Controls.Add(this.CheckRunCheckBox);
+            this.learningParamsGroupBox.Controls.Add(this.learningRunsLabel);
+            this.learningParamsGroupBox.Controls.Add(this.learningRunsTextBox);
             this.learningParamsGroupBox.Controls.Add(this.delayBetweenLearnsLabel);
             this.learningParamsGroupBox.Controls.Add(this.DelayBetweenLearnsBox);
             this.learningParamsGroupBox.Controls.Add(this.learningStepLabel);
@@ -107,7 +114,7 @@ namespace CryptoAnalizerAI.AI_training
             this.learningParamsGroupBox.Controls.Add(this.learningSpeedText);
             this.learningParamsGroupBox.Location = new System.Drawing.Point(12, 247);
             this.learningParamsGroupBox.Name = "learningParamsGroupBox";
-            this.learningParamsGroupBox.Size = new System.Drawing.Size(188, 142);
+            this.learningParamsGroupBox.Size = new System.Drawing.Size(188, 190);
             this.learningParamsGroupBox.TabIndex = 5;
             this.learningParamsGroupBox.TabStop = false;
             this.learningParamsGroupBox.Text = "learning settings";
@@ -227,7 +234,7 @@ namespace CryptoAnalizerAI.AI_training
             // StartLearningButton
             // 
             this.StartLearningButton.BackColor = System.Drawing.Color.PaleGreen;
-            this.StartLearningButton.Location = new System.Drawing.Point(12, 415);
+            this.StartLearningButton.Location = new System.Drawing.Point(12, 443);
             this.StartLearningButton.Name = "StartLearningButton";
             this.StartLearningButton.Size = new System.Drawing.Size(75, 23);
             this.StartLearningButton.TabIndex = 9;
@@ -236,7 +243,7 @@ namespace CryptoAnalizerAI.AI_training
             // 
             // StopLearningButton
             // 
-            this.StopLearningButton.Location = new System.Drawing.Point(206, 415);
+            this.StopLearningButton.Location = new System.Drawing.Point(206, 443);
             this.StopLearningButton.Name = "StopLearningButton";
             this.StopLearningButton.Size = new System.Drawing.Size(75, 23);
             this.StopLearningButton.TabIndex = 10;
@@ -298,11 +305,48 @@ namespace CryptoAnalizerAI.AI_training
             this.highestError.Size = new System.Drawing.Size(121, 23);
             this.highestError.TabIndex = 16;
             // 
+            // AutomaticTrainingBut
+            // 
+            this.AutomaticTrainingBut.Location = new System.Drawing.Point(469, 443);
+            this.AutomaticTrainingBut.Name = "AutomaticTrainingBut";
+            this.AutomaticTrainingBut.Size = new System.Drawing.Size(137, 23);
+            this.AutomaticTrainingBut.TabIndex = 17;
+            this.AutomaticTrainingBut.Text = "automatic training";
+            this.AutomaticTrainingBut.UseVisualStyleBackColor = true;
+            this.AutomaticTrainingBut.Click += new System.EventHandler(this.AutomaticTrainingBut_Click);
+            // 
+            // learningRunsTextBox
+            // 
+            this.learningRunsTextBox.Location = new System.Drawing.Point(98, 123);
+            this.learningRunsTextBox.Name = "learningRunsTextBox";
+            this.learningRunsTextBox.Size = new System.Drawing.Size(84, 23);
+            this.learningRunsTextBox.TabIndex = 6;
+            // 
+            // learningRunsLabel
+            // 
+            this.learningRunsLabel.AutoSize = true;
+            this.learningRunsLabel.Location = new System.Drawing.Point(6, 126);
+            this.learningRunsLabel.Name = "learningRunsLabel";
+            this.learningRunsLabel.Size = new System.Drawing.Size(76, 15);
+            this.learningRunsLabel.TabIndex = 7;
+            this.learningRunsLabel.Text = "learning runs";
+            // 
+            // CheckRunCheckBox
+            // 
+            this.CheckRunCheckBox.AutoSize = true;
+            this.CheckRunCheckBox.Location = new System.Drawing.Point(48, 165);
+            this.CheckRunCheckBox.Name = "CheckRunCheckBox";
+            this.CheckRunCheckBox.Size = new System.Drawing.Size(100, 19);
+            this.CheckRunCheckBox.TabIndex = 8;
+            this.CheckRunCheckBox.Text = "only checking";
+            this.CheckRunCheckBox.UseVisualStyleBackColor = true;
+            // 
             // TrainingWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 478);
+            this.Controls.Add(this.AutomaticTrainingBut);
             this.Controls.Add(this.highestError);
             this.Controls.Add(this.averageErrorDisp);
             this.Controls.Add(this.PredictionGraphic);
@@ -363,5 +407,9 @@ namespace CryptoAnalizerAI.AI_training
         private System.Windows.Forms.PictureBox PredictionGraphic;
         private System.Windows.Forms.TextBox averageErrorDisp;
         private System.Windows.Forms.TextBox highestError;
+        private System.Windows.Forms.Button AutomaticTrainingBut;
+        private System.Windows.Forms.CheckBox CheckRunCheckBox;
+        private System.Windows.Forms.Label learningRunsLabel;
+        private System.Windows.Forms.TextBox learningRunsTextBox;
     }
 }

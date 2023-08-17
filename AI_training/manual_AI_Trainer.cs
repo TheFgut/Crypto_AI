@@ -14,9 +14,16 @@ namespace CryptoAnalizerAI.AI_training
     public class manual_AI_Trainer
     {
         private Perceptron perceptron;
+
+        public Perceptron getPerceptronCopy()
+        {
+            if (perceptron == null) return null;
+            return (Perceptron)perceptron.Clone();
+        }
+
         public bool trainingPending { get; private set; }
-        private BasicLearningSettings basicSettings;
-        private TrainerControllingButtons controllingButtons;
+        public BasicLearningSettings basicSettings { get; private set; }
+        public TrainerControllingButtons controllingButtons { get; set; }
         public DatasetManager datasetManager { get; private set; }
 
 
@@ -25,8 +32,9 @@ namespace CryptoAnalizerAI.AI_training
  
             this.basicSettings = basicSettings;
             this.datasetManager = datasetManager;
-            datasetManager.dataLoaded += DataasetsUpdated;
-            datasetManager.dataChoosed += DataasetsUpdated;
+            datasetManager.dataLoaded += DatasetsUpdated;
+            datasetManager.dataChoosed += DatasetsUpdated;
+            datasetManager.dataWalker.onProceedToNextDataset += RunUpdated;
         }
 
         public void ConnectControllingButtons(TrainerControllingButtons controllingButtons)
@@ -38,7 +46,7 @@ namespace CryptoAnalizerAI.AI_training
         public void ConnectPerceptron(Perceptron perceptron)
         {
             this.perceptron = perceptron;
-            perceptron.settings.setBasicLEarnSettings(basicSettings);
+            perceptron.settings.setBasicLearnSettings(basicSettings);
 
             bool trainEnabled = isGoodConditionsForLearnong();
             if (trainEnabled) controllingButtons.ActivateControls();
@@ -46,7 +54,7 @@ namespace CryptoAnalizerAI.AI_training
         }
 
         //enabling controls
-        public void DataasetsUpdated()
+        public void DatasetsUpdated()
         {
             bool trainEnabled = isGoodConditionsForLearnong();
             if (trainEnabled) controllingButtons.ActivateControls();
@@ -70,7 +78,7 @@ namespace CryptoAnalizerAI.AI_training
                 threadToWork.RunWorkerAsync();
                 onTrainingStart?.Invoke();
             }
-
+            ResetRunsCounter();
             trainingPending = true;
             basicSettings.DeactivateButtons();
         }
@@ -99,7 +107,12 @@ namespace CryptoAnalizerAI.AI_training
                 float[] outputAverages = getAverages(output);
                 float outpStartCourse = inputAverages[inputAverages.Length - 1];
                 float[] outputDifs = convertToDif(outputAverages, outpStartCourse, false);
-                perceptron.Learn(outputDifs);
+
+                if (!basicSettings.checkRun)
+                {
+                    perceptron.Learn(outputDifs);
+                }
+
 
                 //predictionEvent_retCourses(perceptronPrediction, outputAverages);
                 predictionEvent_retDif(perceptronPrediction, outputDifs);
@@ -140,19 +153,53 @@ namespace CryptoAnalizerAI.AI_training
             basicSettings.ActivateButtons();
         }
         public event stateChangeEvent onTrainingEnd;
+        public event stateChangeEvent onRunEnd;
         public void StopTraning()
         {
             if (threadToWork != null)
             {
                 threadToWork.Dispose();
             }
-            onTrainingEnd?.Invoke();
             trainingPending = false;
             basicSettings.ActivateButtons();
+            onTrainingEnd?.Invoke();
         }
 
         public delegate void predictionDelegate(float[] prediction , float[] realCourse);
         public delegate void stateChangeEvent();
         public delegate void trainEnableChange(bool enable);
+
+
+        private int runNum;
+        private int datasetNum;
+        private void RunUpdated()
+        {
+            if (!trainingPending) return;
+            
+            int datasetsCount = datasetManager.choosedDatasets.Length;
+            datasetNum++;
+            if(datasetNum >= datasetsCount)
+            {
+                datasetNum -= datasetsCount;
+                runNum++;
+                if(runNum >= basicSettings.runsCount || basicSettings.checkRun)
+                {
+                    LerningEnd();
+                }
+            }
+            
+        }
+
+        private void ResetRunsCounter()
+        {
+            runNum = 0;
+            datasetNum = 0;
+        }
+
+        private void LerningEnd()
+        {
+            controllingButtons.ResetButtons();
+            StopTraning();
+        }
     }
 }

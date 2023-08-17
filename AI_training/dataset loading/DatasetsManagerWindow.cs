@@ -30,7 +30,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             }
             set
             {
-                datasetConfigurationChanged?.Invoke("mode changed");
+                //datasetConfigurationChanged?.Invoke("mode changed");
                 checkM = value;
             }
         }
@@ -57,7 +57,8 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
         private void dataChoosed(string data)
         {
             datasetConfigurationChanged?.Invoke("");
-            manager.SetChoosedDatasetsInts(choosedDatasets.ToArray());
+            manager.SetChoosedDatasetsInts(learnDatasetsConfigureManager.choosedDatasets.ToArray(), 
+                testDatasetsConfigureManager.choosedDatasets.ToArray());
         }
 
         //loadingDefault path datasets
@@ -118,11 +119,10 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
                     "Datasets loaded: " + loadedDatasets.Count + '\n' + "Errors: " + errors.ToString(), "Message");
             }
 
-            manager.SetChoosedDatasetsInts(new int[0]);
+            manager.SetChoosedDatasetsInts(new int[0], new int[0]);
             manager.SetDatasets(loadedDatasets.ToArray());
 
 
-            choosedDatasets.Clear();
             ShowLoadedDatasets();
 
 

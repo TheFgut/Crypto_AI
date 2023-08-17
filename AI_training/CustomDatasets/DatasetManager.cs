@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CryptoAnalizerAI.AI_training.learning_settings;
 
 namespace CryptoAnalizerAI.AI_training.CustomDatasets
 {
     public class DatasetManager
     {
-
-        public DatasetManager()
+        private BasicLearningSettings settings;
+        public DatasetManager(BasicLearningSettings settings)
         {
+            this.settings = settings;
             dataWalker = new DataWalker(this);
         }
         public Dataset[] datasets { get; private set; } = new Dataset[0];
@@ -16,15 +18,27 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
 
         public event datasetsLoaded dataLoaded;
 
-        public int[] choosedDatasets { get; private set; } = new int[0];
+        public int[] choosedDatasets
+        {
+            get
+            {
+                if (settings.checkRun) return checkDatasetsIds;
+                return learningDatasetsIds;
+            }
+        }
         public event datasetsLoaded dataChoosed;
 
-        public void SetChoosedDatasetsInts(int[] choosedDatasets)
+        private int[] learningDatasetsIds = new int[0];
+        private int[] checkDatasetsIds = new int[0];
+        public void SetChoosedDatasetsInts(int[] choosedDatasets, int[] checkDatasetsIds)
         {
-            this.choosedDatasets = choosedDatasets;
+            learningDatasetsIds = choosedDatasets;
+            this.checkDatasetsIds = checkDatasetsIds;
             dataChoosed?.Invoke();
             dataWalker.Reset();
         }
+
+
 
         public void SetDatasets(Dataset[] datasets)
         {
@@ -73,9 +87,12 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
 
             public event DataWalkerEvent datasetChanged;
 
+            public event DataWalkerEvent onProceedToNextDataset;
+
             public event NumChanged DatasetPositionChanged;
 
             private int loopPreventionCounter;
+
 
             public Interval[] Walk(int needInputDataElements, int needOutputDataElements, out Interval[] outputDataElements, int step = 1)
             {
@@ -134,8 +151,9 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
                 }
 
                 datasetChanged?.Invoke();
-
+                onProceedToNextDataset?.Invoke();
             }
+
 
             public delegate void DataWalkerEvent();
 
@@ -146,6 +164,12 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
                 posInDataset = 0;
                 datasetPos = 0;
                 datasetChanged?.Invoke();
+            }
+
+
+            private class DataPacker
+            {
+                private const int packCount = 5;
             }
         }
     }

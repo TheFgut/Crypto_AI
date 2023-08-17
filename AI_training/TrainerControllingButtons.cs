@@ -13,8 +13,10 @@ namespace CryptoAnalizerAI.AI_training
         private Button stopButton;
 
         private manual_AI_Trainer trainer;
-        public TrainerControllingButtons(Button startButton, Button stopButton, manual_AI_Trainer trainer)
+        private TrainingWindow window;
+        public TrainerControllingButtons(Button startButton, Button stopButton, manual_AI_Trainer trainer, TrainingWindow window)
         {
+            this.window = window;
             this.startButton = startButton;
             startButton.Click += StartLearningButton_Click;
             this.stopButton = stopButton;
@@ -73,14 +75,42 @@ namespace CryptoAnalizerAI.AI_training
             enabled = false;
         }
 
-        public void ActivateControls()
+        public void ActivateControls(bool inNormalThread = false)
         {
             if (enabled) return;
 
-            startButton.Enabled = true;
-            startButton.Text = "Start";
+            if (inNormalThread)
+            {
+                startButton.Enabled = true;
+                startButton.Text = "Start";
+            }
+            else
+            {
+                window.BeginInvoke(new multiThreadCall(ActivateControls), true);
 
-            enabled = true;
+                enabled = true;
+            }
+
+
+
         }
+
+        public void ResetButtons(bool inNormalThread = false)
+        {
+            if (inNormalThread)
+            {
+                stopButton.BackColor = SystemColors.Control;
+
+                startButton.Text = "Start";
+                startButton.BackColor = SystemColors.Control;
+            }
+            else
+            {
+                window.BeginInvoke(new multiThreadCall(ResetButtons), true);
+            }
+        }
+
+        public delegate void multiThreadCall(bool mult);
     }
+
 }

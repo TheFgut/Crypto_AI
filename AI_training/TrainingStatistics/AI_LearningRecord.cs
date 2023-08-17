@@ -19,7 +19,7 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
                 {
                     return learningRuns[learningRuns.Length - 1].averageError;
                 }
-                return -1;
+                return float.MaxValue;
             }
         }
 
@@ -31,7 +31,19 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
                 {
                     return testRun.averageError;
                 }
-                return -1;
+                return float.MaxValue;
+            }
+        }
+
+        public float finalGuessPercent
+        {
+            get
+            {
+                if (testRun != null)
+                {
+                    return testRun.averageGuessFrequency;
+                }
+                return float.MaxValue;
             }
         }
 
@@ -51,5 +63,11 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
         {
 
         }        //for json saving
+
+
+        public static AI_LearningRecord makeWorstStats()
+        {
+            return new AI_LearningRecord();
+        }
     }
 }

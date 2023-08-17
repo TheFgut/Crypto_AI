@@ -16,7 +16,7 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
             this.datasetManager = datasetManager;
             this.trainer = trainer;
 
-            datasetManager.dataWalker.datasetChanged += DatasetChanged;
+            datasetManager.dataWalker.onProceedToNextDataset += DatasetChanged;
             trainer.predictionEvent_retDif += recordNeuralOutput;
             trainer.onTrainingStart += InitiateNewStatisticsRecording;
             trainer.onTrainingEnd += LearningFinished;
@@ -40,25 +40,21 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
 
         private List<DatasetLearningStats> neuralNetworkStats = new List<DatasetLearningStats>();
 
-        public DatasetLearningStats[] getAllRecordingsAndFinish()
+        public DatasetLearningStats[] getAllRecordingsAndClear()
         {
             PackStatisticRecording();
 
-            datasetManager.dataWalker.datasetChanged -= DatasetChanged;
-            trainer.predictionEvent_retDif -= recordNeuralOutput;
-            trainer.onTrainingStart -= InitiateNewStatisticsRecording;
-            trainer.onTrainingEnd -= LearningFinished;
-
-            return neuralNetworkStats.ToArray();
+            DatasetLearningStats[] stats = neuralNetworkStats.ToArray();
+            neuralNetworkStats.Clear();
+            return stats;
+ 
         }
-        public event errorReturn runFinishedReturnError;
-        public event errorReturn runFinishedReturnGuessFrequency;
+
+
         private void PackStatisticRecording()
         {
             float guessFrequence = (float)guessCount / errorValues.Count;
-            runFinishedReturnGuessFrequency?.Invoke(guessFrequence);
             DatasetLearningStats learningStats = new DatasetLearningStats(errorValues.ToArray(), courseValues.ToArray(), guessFrequence);
-            runFinishedReturnError?.Invoke(learningStats.averageError);
 
             neuralNetworkStats.Add(learningStats);
             ClearRecordingCache();

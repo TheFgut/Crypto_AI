@@ -9,10 +9,13 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
         public DatasetLearningStats[] stats { get; set; }
 
         public float averageError { get; set; }
+
+        public float averageGuessFrequency { get; set; }
         public DatasetsRun(DatasetLearningStats[] stats)
         {
             this.stats = stats;
             averageError = calculateAverageError(stats);
+            averageGuessFrequency = calculateAverageGuessFrequency(stats);
         }
 
 
@@ -29,6 +32,16 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
                 errorsSum += lStat.averageError;
             }
             return errorsSum / stats.Length;
+        }
+
+        private float calculateAverageGuessFrequency(DatasetLearningStats[] stats)
+        {
+            float guessFreqSum = 0;
+            foreach (DatasetLearningStats lStat in stats)
+            {
+                guessFreqSum += lStat.guessFrequency;
+            }
+            return guessFreqSum / stats.Length;
         }
     }
 }

@@ -6,15 +6,32 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
 {
     public static class GuessConditions
     {
-        private const float coincidenceTreshold = 0.7f;
-        private const float difTreshold = 0.015f;
+        private const float coincidenceTreshold = 0.3f;
+        private const float difTreshold = 0.0005f;
         public static bool isThisGuess(float[] neural, float[] real)
         {
-            float neuralDif = neural[neural.Length - 1] - neural[0];
-            float realDif = real[real.Length - 1] - real[0];
+            float neuralFinalPoint = getSum(neural);
+            float realFinalPoint = getSum(real);
+            if(realFinalPoint == 0)
+            {
+                if (neuralFinalPoint < difTreshold) return true;
+                return false;
+            }
 
+            bool loverThanTresholdDif = Math.Abs(neuralFinalPoint - realFinalPoint) < difTreshold;
+            if (Math.Sign(neuralFinalPoint) != Math.Sign(realFinalPoint) && !loverThanTresholdDif) return false;
 
-            return (neuralDif / realDif) > coincidenceTreshold || (neuralDif - realDif) < difTreshold;
+            return Math.Abs((neuralFinalPoint / realFinalPoint) - 1) < coincidenceTreshold || loverThanTresholdDif;
+        }
+
+        private static float getSum(float[] values)
+        {
+            float sum = 0;
+            foreach (float val in values)
+            {
+                sum += val;
+            }
+            return sum;
         }
     }
 }
