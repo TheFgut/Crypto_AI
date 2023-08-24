@@ -14,11 +14,15 @@ namespace CryptoAnalizerAI.AI_training.learning_settings
         private TextBox runsCountBox;
         private CheckBox checkRunBox;
         private TrainingWindow window;
-        public BasicLearningSettings(TextBox learningSpdBox, TextBox learningStepBox, TextBox learningDelayBox, TextBox runsCountBox, CheckBox checkRunBox, TrainingWindow window)
+
+        public LearningSpeedSettings speed { get; private set; }
+
+        private Button spdSetupBut;
+        public BasicLearningSettings(TextBox learningSpdBox, TextBox learningStepBox, TextBox learningDelayBox, TextBox runsCountBox, CheckBox checkRunBox, TrainingWindow window, Button spdSetupBut)
         {
+            this.spdSetupBut = spdSetupBut;
             this.window = window;
             this.learningSpdBox = learningSpdBox;
-            learningSpdBox.Validating += learningSpdUpdate;
             this.learningStepBox = learningStepBox;
             learningStepBox.Validating += learningStepUpdate;
             this.learningDelayBox = learningDelayBox;
@@ -28,27 +32,14 @@ namespace CryptoAnalizerAI.AI_training.learning_settings
             this.checkRunBox = checkRunBox;
             checkRunBox.Validated += ChecRunBoxChecked;
 
-            learningSpdBox.Text = learningSpeed.ToString();
             learningStepBox.Text = learningStep.ToString();
             learningDelayBox.Text = learningDelay.ToString();
             runsCountBox.Text = runsCount.ToString();
             checkRunBox.Checked = checkRun;
 
+            speed = new LearningSpeedSettings(learningSpdBox, window);
         }
 
-        private void learningSpdUpdate(object sender, EventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            float value;
-            if (float.TryParse(textBox.Text, out value))
-            {
-                learningSpeed = value;
-            }
-            else
-            {
-                textBox.Text = learningSpeed.ToString();
-            }
-        }
 
         private void learningStepUpdate(object sender, EventArgs e)
         {
@@ -103,16 +94,18 @@ namespace CryptoAnalizerAI.AI_training.learning_settings
             this.checkRun = checkRun;
         }
 
+        public event enableCallBack onEnableChange;
         public void DeactivateButtons(bool inNormalThread = false)
         {
 
             if (inNormalThread)
             {
-                learningSpdBox.ReadOnly = true;
+                spdSetupBut.Enabled = false;
                 learningStepBox.ReadOnly = true;
                 learningDelayBox.ReadOnly = true;
                 runsCountBox.ReadOnly = true;
                 checkRunBox.Enabled = false;
+                onEnableChange?.Invoke(false);
             }
             else
             {
@@ -125,11 +118,12 @@ namespace CryptoAnalizerAI.AI_training.learning_settings
 
             if (inNormalThread)
             {
-                learningSpdBox.ReadOnly = false;
+                spdSetupBut.Enabled = true;
                 learningStepBox.ReadOnly = false;
                 learningDelayBox.ReadOnly = false;
                 runsCountBox.ReadOnly = false;
                 checkRunBox.Enabled = true;
+                onEnableChange?.Invoke(true);
             }
             else
             {
@@ -140,13 +134,73 @@ namespace CryptoAnalizerAI.AI_training.learning_settings
 
         public delegate void multiThreadCall(bool mult);
 
-        public float learningSpeed { get; private set; } = 0.001f;
         public int learningStep { get; private set; } = 6;
         public int learningDelay { get; private set; } = 1;
 
         public int runsCount { get; private set; } = 2;
 
         public bool checkRun { get; private set; }
+
+
+        public delegate void enableCallBack(bool change);
+    }
+
+    public class LearningSpeedSettings
+    {
+        private TextBox currentSpeedDisp;
+        private TrainingWindow window;
+        public LearningSpeedSettings(TextBox currentSpeedDisp, TrainingWindow window)
+        {
+            this.currentSpeedDisp = currentSpeedDisp;
+            this.window = window;
+            currentSpeedDisp.Text = startSpeed.ToString();
+        }
+
+        public float startSpeed = 0.001f;
+        public float endSpeed = 0.0001f;
+
+        public float speedDecreasErrorTreshold = 5;
+        public float maxSpeedDecreaseErrorTreshold = 10;
+        public float errorDecreasedSpeed = 0.0000001f;
+
+        private float prevSpd = 0;
+        public float getSpeed(float learnProgress, float error)
+        {
+            float progressedLSpeed = Lerp(startSpeed, endSpeed, learnProgress);
+            float errorCorrectedLSpeed = Lerp(progressedLSpeed, errorDecreasedSpeed, getErrorLerpCoef(error));
+            if(prevSpd != errorCorrectedLSpeed) showCurrentSpd(errorCorrectedLSpeed);
+            return errorCorrectedLSpeed;
+        }
+
+        public void Reset()
+        {
+            showCurrentSpd(startSpeed);
+        }
+
+        private float Lerp(float firstFloat, float secondFloat, float by)
+        {
+            return firstFloat * (1 - by) + secondFloat * by;
+        }
+
+
+        private float getErrorLerpCoef(float error)
+        {
+            if (error < speedDecreasErrorTreshold) return 0;
+            if (error > maxSpeedDecreaseErrorTreshold) return 1;
+            return (error - speedDecreasErrorTreshold) / (maxSpeedDecreaseErrorTreshold - speedDecreasErrorTreshold);
+        }
+
+        private void showCurrentSpd(float value)
+        {
+            window.BeginInvoke(new setText(setTextFunc), currentSpeedDisp, value.ToString());
+        }
+
+        private void setTextFunc(TextBox box, string text)
+        {
+            box.Text = text;
+        }
+
+        private delegate void setText(TextBox box, string text);
     }
 }
 

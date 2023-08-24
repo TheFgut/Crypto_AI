@@ -75,7 +75,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
 
             for (int i = 0; i < datasets.Length; i++)
             {
-                loadedTable.Rows.Add(new object[] { DateTime.Parse("1/1/2016"), datasets[i].average, 0, 0, i });
+                loadedTable.Rows.Add(new object[] { DateTime.Parse("1/1/2016"), datasets[i].durationInHours, datasets[i].average, 0, 0, i });
             }
 
         }
@@ -84,6 +84,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("Date", typeof(DateTime));
+            dt.Columns.Add("Duration(h)", typeof(float));
             dt.Columns.Add("Average", typeof(float));
             dt.Columns.Add("Min", typeof(float));
             dt.Columns.Add("Max", typeof(float));
@@ -126,9 +127,10 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
             setupBut.Enabled = false;
             removeBUt.Enabled = false;
 
+            loadedDataGrids[1].AddRow(choosedID, choosedDataGrid);
             int transferedDatasetID = choosedDataGrid.TransferRowTo(choosedID, loadedDataGrids[0]);
-            loadedDataGrids[1].AddRow(choosedID, loadedDataGrids[0]);
-            choosedDatasets.Remove(transferedDatasetID);
+
+            choosedDatasets.Remove(choosedID);
             //manager.SetChoosedDatasetsInts(choosedDatasets.ToArray());
 
             //choosedDatasetInfo.Text = "";

@@ -95,6 +95,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
             this.Controls.Add(this.CreatePerceptronButton);
             this.Name = "PerceptronConfigurationWindow";
             this.Text = "PerceptronConfigurationWindow";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PerceptronConfigurationWindow_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.perceptronDrawing)).EndInit();
             this.ResumeLayout(false);
 

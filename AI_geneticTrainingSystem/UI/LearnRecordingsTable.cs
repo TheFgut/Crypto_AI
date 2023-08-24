@@ -40,10 +40,12 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem.UI
         private void IterationFinished(AI_LearningRecord record, int iteration)
         {
 
-            object[] row = new object[] { iteration, record.finalError, record.finalGuessPercent * 100, record.perceptron.ToString(), record.finalLearn_RunError };
-
+            object[] row = new object[] { iteration, record.finalError, record.finalGuessValue * 100, record.perceptron.ToString(), record.finalLearn_RunError };
             table.Rows.Add(row);
+
+            window.BeginInvoke(new tableVisualUpdate(dataGrid.Update));
         }
 
+        private delegate void tableVisualUpdate();
     }
 }

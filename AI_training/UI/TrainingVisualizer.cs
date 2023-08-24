@@ -12,14 +12,16 @@ namespace CryptoAnalizerAI.AI_training
         private CurrentErrorDisplay currentError;
         private DatasetPositionDisplay positionDisp;
         private AverageAndHighestError averageAndHighestErrDisp;
-        public TrainingVisualizer(PictureBox CurrentErrorDisplayPicture,TextBox averageErrorValueBox, TextBox highestErrTextBox, PictureBox learnPosGraphic, manual_AI_Trainer trainer)
+        private TrainDataWalkingStatistic trainWalkerStat;
+        public TrainingVisualizer(PictureBox CurrentErrorDisplayPicture,TextBox averageErrorValueBox, TextBox highestErrTextBox, PictureBox learnPosGraphic, manual_AI_Trainer trainer,
+            TextBox datasetNumDisp, TextBox dataNumDisp, DatasetManager manager, TrainingWindow window)
         {
             currentError = new CurrentErrorDisplay(CurrentErrorDisplayPicture);
             averageAndHighestErrDisp = new AverageAndHighestError(averageErrorValueBox, highestErrTextBox);
             trainer.predictionEvent_retDif += currentError.Update;
             trainer.predictionEvent_retDif += averageAndHighestErrDisp.Update;
             positionDisp = new DatasetPositionDisplay(learnPosGraphic,  trainer.datasetManager);
-
+            trainWalkerStat = new TrainDataWalkingStatistic(manager, datasetNumDisp, dataNumDisp, window, trainer);
         }
 
         private class CurrentErrorDisplay
@@ -54,7 +56,15 @@ namespace CryptoAnalizerAI.AI_training
                 Point[] outputPoints = new Point[AI_output.Length];
                 for (int i = 0; i < outputPoints.Length; i++)
                 {
-                    outputPoints[i] = new Point( (int)((i/(float)l) * width), (int)(-(AI_output[i] - average) * scale) + HalfHeigth);
+                    outputPoints[i] = new Point( (int)((i/(float)(l-1)) * width), (int)(-(AI_output[i] - average) * scale) + HalfHeigth);
+                    if (outputPoints[i].Y > heigth)
+                    {
+                        outputPoints[i].Y = heigth;
+                    }
+                    if(outputPoints[i].Y < 0)
+                    {
+                        outputPoints[i].Y = 0;
+                    }
                 }
                 if(outputPoints.Length == 1)
                 {
@@ -70,7 +80,7 @@ namespace CryptoAnalizerAI.AI_training
                 Point[] coursePoints = new Point[realCourse.Length];
                 for (int i = 0; i < coursePoints.Length; i++)
                 {
-                    coursePoints[i] = new Point((int)((i / (float)l) * width), (int)(-(realCourse[i] - average) * scale) + HalfHeigth);
+                    coursePoints[i] = new Point((int)((i / (float)(l - 1)) * width), (int)(-(realCourse[i] - average) * scale) + HalfHeigth);
                 }
                 if (outputPoints.Length == 1)
                 {
@@ -294,6 +304,48 @@ namespace CryptoAnalizerAI.AI_training
                 else
                     textBox.Text = text;
             }
+        }
+
+        private class TrainDataWalkingStatistic
+        {
+            private manual_AI_Trainer trainer;
+
+            private TextBox datasetCounterDisp;
+            private TextBox stepCounterDisp;
+
+            private TrainingWindow window;
+            public TrainDataWalkingStatistic(DatasetManager manager, TextBox datasetCounterDisp, TextBox stepCounterDisp, TrainingWindow window, manual_AI_Trainer trainer)
+            {
+                this.datasetCounterDisp = datasetCounterDisp;
+                this.stepCounterDisp = stepCounterDisp;
+                this.window = window;
+                this.trainer = trainer;
+
+                trainer.onRunEnd += newRun;
+                trainer.onTrainingStart += newRun;
+                manager.dataWalker.DatasetPositionChanged += dataWalked;
+            }
+
+            private void newRun()
+            {
+                if (!window.InvokeRequired) return;
+                int runNum = trainer.runNum;
+                window.BeginInvoke(new textSet(setText), datasetCounterDisp, runNum.ToString());
+            }
+
+            private void dataWalked(int num)
+            {
+                if (!window.InvokeRequired) return;
+                window.BeginInvoke(new textSet(setText), stepCounterDisp, num.ToString());
+
+            }
+
+            private void setText(TextBox box,string text)
+            {
+                box.Text = text;
+            }
+
+            private delegate void textSet(TextBox box, string text);
         }
     }
 }

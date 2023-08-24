@@ -24,6 +24,7 @@ namespace CryptoAnalizerAI
             {
                 Directory.CreateDirectory(saveDestination);
             }
+            
             string json = JsonSerializer.Serialize(objectToSave);
 
             string path = Path.Combine(saveDestination, saveFileName);

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_making;
+using CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_loading;
 
 namespace CryptoAnalizerAI.AI_training.AI_Perceptron
 {
@@ -25,21 +26,23 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
 
 
         //creating perceptron
-        private PerceptronMakerWindow perceptronMaker;
+        private PerceptronMakerWindow perceptronMakerWindow;
         private void CreatePerceptronButton_Click(object sender, EventArgs e)
         {
-            if(perceptronMaker == null)
+            if(perceptronMakerWindow == null)
             {
-                perceptronMaker = new PerceptronMakerWindow(perceptronCreated);
-                perceptronMaker.FormClosed += perceptronMakerClosed;
-                perceptronMaker.Show();
+                perceptronMakerWindow = new PerceptronMakerWindow(perceptronCreated);
+                perceptronMakerWindow.FormClosed += perceptronMakerClosed;
+                perceptronMakerWindow.Show();
             }
+            CreatePerceptronButton.Enabled = false;
         }
 
         private void perceptronMakerClosed(object sender, EventArgs e)
         {
-            perceptronMaker.FormClosed -= perceptronMakerClosed;
-            perceptronMaker = null;
+            perceptronMakerWindow.FormClosed -= perceptronMakerClosed;
+            perceptronMakerWindow = null;
+            CreatePerceptronButton.Enabled = true;
         }
 
         private void perceptronCreated(Perceptron newPerceptron)
@@ -62,9 +65,23 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
 
         }
         //loading perceptron
+        private PerceptronLoadingWindow loaderWindow;
         private void LoadPerceptronButton_Click(object sender, EventArgs e)
         {
+            if(loaderWindow == null)
+            {
+                loaderWindow = new PerceptronLoadingWindow(perceptronLoaded);
+                loaderWindow.FormClosed += perceptronLoaderClosed;
+                loaderWindow.Show();
+            }
+            LoadPerceptronButton.Enabled = false;
+        }
 
+        private void perceptronLoaderClosed(object sender, EventArgs e)
+        {
+            loaderWindow.FormClosed -= perceptronLoaderClosed;
+            loaderWindow = null;
+            LoadPerceptronButton.Enabled = true;
         }
 
         private void perceptronLoaded(Perceptron newPerceptron)
@@ -86,5 +103,11 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         }
 
         public delegate void createdOrLoadedperceptronTransfer(Perceptron perceptron);
+
+        private void PerceptronConfigurationWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (loaderWindow != null) loaderWindow.Close();
+            if (perceptronMakerWindow != null) perceptronMakerWindow.Close();
+        }
     }
 }

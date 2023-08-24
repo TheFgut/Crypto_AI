@@ -11,6 +11,8 @@ using CryptoAnalizerAI.AI_training.AI_Perceptron;
 using System.Threading;
 using CryptoAnalizerAI.AI_training.CustomDatasets;
 using CryptoAnalizerAI.AI_geneticTrainingSystem;
+using CryptoAnalizerAI.AI_training.TrainingStatistics;
+using CryptoAnalizerAI.AI_training.UI;
 
 namespace CryptoAnalizerAI.AI_training
 {
@@ -21,16 +23,22 @@ namespace CryptoAnalizerAI.AI_training
         private manual_AI_Trainer trainer;
         private DatasetManager datasetsManager;
         private TrainingVisualizer visualizer;
+        private DataCompressionParamsController dataComprController;
+        private WeightSignCorrectionController signCorrectionControls;
+        private LearningEarlyStops learningEarlyStops;
+
+        private StatisticChronometer statisticsChronometer;
         public TrainingWindow()
         {
             InitializeComponent();
 
-            learningSettings = new BasicLearningSettings(learningSpeedText, learningStepText, DelayBetweenLearnsBox, learningRunsTextBox, CheckRunCheckBox, this);
+            learningSettings = new BasicLearningSettings(learningSpeedText, learningStepText, DelayBetweenLearnsBox, learningRunsTextBox, CheckRunCheckBox, this, learningSpeedSetupBut);
             datasetsManager = new DatasetManager(learningSettings);
             trainer = new manual_AI_Trainer(learningSettings, datasetsManager);
             trainerControls = new TrainerControllingButtons(StartLearningButton, StopLearningButton, trainer, this);
 
-            visualizer = new TrainingVisualizer(PredictionGraphic, averageErrorDisp, highestError, learnPosGraphic, trainer);
+            visualizer = new TrainingVisualizer(PredictionGraphic, averageErrorDisp, highestError, learnPosGraphic, trainer,
+                 DatasetNumDiaplay, WalkNumDisplay, datasetsManager, this);
 
             trainerControls.DeactivateControls();
             ChackDatasetConfiguration();
@@ -40,8 +48,15 @@ namespace CryptoAnalizerAI.AI_training
             datasetManager.datasetConfigurationChanged += datasetsConfigured;
             datasetManager.FormClosing += DatasetManagerClosing;
 
+            dataComprController = new DataCompressionParamsController(compressionValueTextBox, ApplyCompressionBut, datasetsManager, trainer);
 
             datasetManager.LoadDatasetsFromDefaultPath();
+
+            statisticsChronometer = new StatisticChronometer(datasetsManager, trainer);
+            signCorrectionControls = new WeightSignCorrectionController(trainer.signCorrection, WeigthSignCorrectionTextBox);
+            learningEarlyStops = new LearningEarlyStops(statisticsChronometer, trainer, this, countToStopTresholdTextBox, errorDontChangeTresholdTextBox, errorDontChangeCounterTextBox);
+
+            trainer.connectEarlyStopsModule(learningEarlyStops);
         }
 
         private void TrainingWindow_Load(object sender, EventArgs e)
@@ -129,7 +144,7 @@ namespace CryptoAnalizerAI.AI_training
         {
             if(automaticTrainingWindow == null)
             {
-                automaticTrainingWindow = new GeneticTrainerSettingUpWindow(datasetsManager,trainer);
+                automaticTrainingWindow = new GeneticTrainerSettingUpWindow(datasetsManager,trainer, statisticsChronometer);
                 automaticTrainingWindow.FormClosed += AutomaticTrainingWindowClosed;
                 automaticTrainingWindow.Show();
             }
@@ -141,6 +156,23 @@ namespace CryptoAnalizerAI.AI_training
             automaticTrainingWindow = null;
         }
 
+        private LearningSpeedSetupWindow lSpeedSetup;
+        private void learningSpeedSetupBut_Click(object sender, EventArgs e)
+        {
+            if(lSpeedSetup == null)
+            {
+                lSpeedSetup = new LearningSpeedSetupWindow(learningSettings.speed);
+                lSpeedSetup.FormClosed += lSpeedSetupWindowClosed;
+                learningSettings.onEnableChange += lSpeedSetup.EnableChange;
+                lSpeedSetup.Show();
+            }
+        }
 
+        private void lSpeedSetupWindowClosed(object sender, EventArgs e)
+        {
+            lSpeedSetup.FormClosed -= lSpeedSetupWindowClosed;
+            learningSettings.onEnableChange -= lSpeedSetup.EnableChange;
+            lSpeedSetup = null;
+        }
     }
 }

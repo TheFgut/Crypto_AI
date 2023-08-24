@@ -8,11 +8,12 @@ using System.Windows.Forms;
 using CryptoAnalizerAI.AI_training;
 using CryptoAnalizerAI.AI_training.CustomDatasets;
 using CryptoAnalizerAI.AI_geneticTrainingSystem.UI;
+using CryptoAnalizerAI.AI_training.TrainingStatistics;
 
 
 namespace CryptoAnalizerAI.AI_geneticTrainingSystem
 {
-    public partial class GeneticTrainerSettingUpWindow : Form
+    partial class GeneticTrainerSettingUpWindow : Form
     {
 
         private NeuralN_Info neuralInfoUI;
@@ -20,18 +21,21 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
         private ControlsButtons controlButtons;
 
         private LearnRecordingsTable recordTable;
-        public GeneticTrainerSettingUpWindow(DatasetManager datasetManager, manual_AI_Trainer trainer)
+        private ChangeModeCheckBox chengeModeChck;
+        public GeneticTrainerSettingUpWindow(DatasetManager datasetManager, manual_AI_Trainer trainer, StatisticChronometer statsChronometer)
         {
 
             InitializeComponent();
 
             GeneticTrainerSettings trainerSettings = new GeneticTrainerSettings();
-            geneticTrainer = new GeneticTrainer(datasetManager, trainer, trainerSettings);
+            geneticTrainer = new GeneticTrainer(datasetManager, trainer, trainerSettings, statsChronometer);
             controlButtons = new ControlsButtons(TrainingStartBut, TrainingStopBut, trainer, geneticTrainer);
 
             neuralInfoUI = new NeuralN_Info(neuralInfoText,updateNumDisp, geneticTrainer.generator, this);
 
             recordTable = new LearnRecordingsTable(TrainedAIDataGridView, geneticTrainer, this);
+
+            chengeModeChck = new ChangeModeCheckBox(changeStructureCheckBox, geneticTrainer);
         }
 
 

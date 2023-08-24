@@ -15,6 +15,11 @@ namespace CryptoAnalizerAI.AI_training
     {
         private Perceptron perceptron;
 
+        public Perceptron getPerceptron()
+        {
+            return perceptron;
+        }
+
         public Perceptron getPerceptronCopy()
         {
             if (perceptron == null) return null;
@@ -26,7 +31,7 @@ namespace CryptoAnalizerAI.AI_training
         public TrainerControllingButtons controllingButtons { get; set; }
         public DatasetManager datasetManager { get; private set; }
 
-
+        public WeightsSignCorrection signCorrection { get; private set; }
         public manual_AI_Trainer(BasicLearningSettings basicSettings, DatasetManager datasetManager)
         {
  
@@ -35,6 +40,7 @@ namespace CryptoAnalizerAI.AI_training
             datasetManager.dataLoaded += DatasetsUpdated;
             datasetManager.dataChoosed += DatasetsUpdated;
             datasetManager.dataWalker.onProceedToNextDataset += RunUpdated;
+            signCorrection = new WeightsSignCorrection();
         }
 
         public void ConnectControllingButtons(TrainerControllingButtons controllingButtons)
@@ -96,7 +102,8 @@ namespace CryptoAnalizerAI.AI_training
                 }
 
                 Interval[] output;
-                Interval[] input = datasetManager.dataWalker.Walk(perceptron.inputLength + 1, perceptron.outputLength, out output, basicSettings.learningStep + 1);
+                Interval[] input = datasetManager.dataWalker.Walk(perceptron.inputLength + 1, perceptron.outputLength, out output,
+                    basicSettings.checkRun ? 1 : basicSettings.learningStep + 1);
 
 
                 float[] inputAverages = getAverages(input);
@@ -110,7 +117,16 @@ namespace CryptoAnalizerAI.AI_training
 
                 if (!basicSettings.checkRun)
                 {
-                    perceptron.Learn(outputDifs);
+                    float progress = runNum / (float)basicSettings.runsCount;
+
+                    float error = 0;
+                    for (int i = 0; i < outputDifs.Length;i++)
+                    {
+                        error += Math.Abs(outputDifs[i] - perceptronPrediction[i]);
+                    }
+
+                    float speed = basicSettings.speed.getSpeed(progress, error);
+                    perceptron.Learn(outputDifs, speed);
                 }
 
 
@@ -119,8 +135,6 @@ namespace CryptoAnalizerAI.AI_training
 
                 Thread.Sleep(basicSettings.learningDelay);
             } while (true);
-
-
         }
 
         private float[] getAverages(Interval[] intervals)
@@ -169,8 +183,14 @@ namespace CryptoAnalizerAI.AI_training
         public delegate void stateChangeEvent();
         public delegate void trainEnableChange(bool enable);
 
+        private LearningEarlyStops learningEarlyStops;
 
-        private int runNum;
+        public void connectEarlyStopsModule(LearningEarlyStops learningEarlyStops)
+        {
+            this.learningEarlyStops = learningEarlyStops;
+        }
+
+        public int runNum { get; private set; }
         private int datasetNum;
         private void RunUpdated()
         {
@@ -178,11 +198,25 @@ namespace CryptoAnalizerAI.AI_training
             
             int datasetsCount = datasetManager.choosedDatasets.Length;
             datasetNum++;
-            if(datasetNum >= datasetsCount)
+
+            if (datasetNum >= datasetsCount)
             {
                 datasetNum -= datasetsCount;
                 runNum++;
-                if(runNum >= basicSettings.runsCount || basicSettings.checkRun)
+  
+                if (learningEarlyStops != null && learningEarlyStops.doStop)
+                {
+                    onRunEnd?.Invoke();
+                    LerningEnd();
+                    return;
+                }
+
+                if (signCorrection.correctIterationNum == runNum)
+                {
+                    signCorrection.Correct(perceptron);
+                }
+                onRunEnd?.Invoke();
+                if (runNum >= basicSettings.runsCount || basicSettings.checkRun)
                 {
                     LerningEnd();
                 }

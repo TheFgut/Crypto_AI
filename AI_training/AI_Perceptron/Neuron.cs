@@ -7,7 +7,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
     public class Neuron
     {
         protected float num;
-        protected link[] links;
+        public link[] links { get; protected set; }
 
         public virtual void Init(Neuron[] inputNeurons, bool bias, Random randomModule)
         {
@@ -25,6 +25,16 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
                 links[normalNCount].addToWeigth((float)randomModule.NextDouble());
             }
         }
+
+
+        public void setWeigths(float[] weigths)
+        {
+            for (int i = 0; i < weigths.Length; i++)
+            {
+                links[i].setWeigth(weigths[i]);
+            }
+        }
+
 
         public float getNum()
         {
@@ -88,7 +98,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
             return inputs;
         }
 
-        protected class link
+        public class link
         {
             public float weigth { get; private set; }
             public Neuron neuron { get; private set; }
@@ -103,6 +113,11 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
             public void addToWeigth(float value)
             {
                 weigth += value;
+            }
+
+            internal void setWeigth(float weigth)
+            {
+                this.weigth = weigth;
             }
         }
 

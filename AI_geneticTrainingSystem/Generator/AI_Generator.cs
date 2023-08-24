@@ -59,6 +59,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem.Generator
             else
             {
                 perceptron = (Perceptron)previousRun.perceptron.Clone();
+                currendRun.setPerceptron(perceptron);
                 currentLayer++;
                 if (currentLayer < perceptron.hiddenLayersCount + 1)
                 {

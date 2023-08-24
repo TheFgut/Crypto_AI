@@ -10,7 +10,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
     {
 
 
-        public Neuron[][] neurons;//1 - number of layer, 2 - number of neuron in layer
+        public Neuron[][] neurons { get; private set; }//1 - number of layer, 2 - number of neuron in layer
         public Perceptron_settings settings { get; private set; }
 
         public int inputLength { get { return neurons.Length == 0 || neurons == null ? 0 : neurons[0].Length; } }
@@ -35,20 +35,38 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
             //neuronsGenerate(settings);
         }
 
-        public bool[] bias { get; set; }
+        public Perceptron(Perceptron_SaveFile saveFile)
+        {
+            settings = new Perceptron_settings(saveFile.layersConfiguration, saveFile.bias, new hyperbolicTan());
+            neuronsGenerate<Neuron>(settings, saveFile.bias);
+            applyWeigths(saveFile.weigths);
+        }
+
+        private void applyWeigths(float[][][] weigths)
+        {
+            //to do weigth assign to neurons
+
+            for (int layerNum = 0; layerNum < weigths.Length; layerNum++)
+            {
+                Neuron[] layer = neurons[layerNum]; ;
+                for (int neuronNum = 0; neuronNum < weigths[layerNum].Length; neuronNum++)
+                {
+                    layer[neuronNum].setWeigths(weigths[layerNum][neuronNum]);
+                }
+            }
+        }
+
         public Perceptron(int[] layers, bool[] bias)
         {
-            this.bias = bias;
-            settings = new Perceptron_settings(layers, new hyperbolicTan());
+            settings = new Perceptron_settings(layers, bias, new hyperbolicTan());
             neuronsGenerate<Neuron>(settings, bias);
             
         }
 
-        private Perceptron(Perceptron_settings settings, bool[] bias)
+        private Perceptron(Perceptron_settings settings)
         {
-            this.bias = bias;
             this.settings = settings;
-            neuronsGenerate<Neuron>(settings, bias);
+            neuronsGenerate<Neuron>(settings, settings.bias);
         }
 
         private void neuronsGenerate<N>(Perceptron_settings settings, bool[] biases) where N : Neuron, new() 
@@ -132,7 +150,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
 
             return outputData;
         }
-        private void backPropagate()
+        private void backPropagate(float learningSpeed)
         {
             for (int LayerN = neurons.Length - 2; LayerN > 1; LayerN--)//всё остальное вплоть до входных
             {
@@ -140,7 +158,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
                 {
                     float proizvodnaya = settings.activationFunc.derivative(neurons[LayerN][NeuronN].getNum());
                     float weights_delta = neurons[LayerN][NeuronN].error * proizvodnaya;
-                    neurons[LayerN][NeuronN].backPropagate(weights_delta, settings.basicLearnSettings.learningSpeed);
+                    neurons[LayerN][NeuronN].backPropagate(weights_delta, learningSpeed);
                 }
             }
             //продолжение обратного распространения, если к перцептрону подключен/ы другой/ие
@@ -155,8 +173,9 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
             }
 
         }
-        public void Learn(float[] expectedOutput)
+        public void Learn(float[] expectedOutput, float learningSpeed)
         {
+
             ereaseLerningErrorData();
             //изменение весов(обратное распостранение)
             int L = neurons.Length - 1;
@@ -167,10 +186,10 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
                 float proizvodnaya = settings.activationFunc.derivative(neurons[L][NeuronN].getNum());
                 float currentNeuronError = error * proizvodnaya;
                 neurons[L][NeuronN].increaseError(currentNeuronError);
-                neurons[L][NeuronN].backPropagate(currentNeuronError, settings.basicLearnSettings.learningSpeed);
+                neurons[L][NeuronN].backPropagate(currentNeuronError, learningSpeed);
 
             }
-            backPropagate();
+            backPropagate(learningSpeed);
 
         }
 
@@ -200,7 +219,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         public object Clone()
         {
             //to do cloning weights values
-            Perceptron perceptron = new Perceptron((Perceptron_settings)settings.Clone(),bias);
+            Perceptron perceptron = new Perceptron((Perceptron_settings)settings.Clone());
 
             return perceptron;
         }        //cloning only structure
@@ -208,7 +227,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         public Perceptron_SaveFile makeSaveFile()
         {
             //throw new NotImplementedException();
-            return new Perceptron_SaveFile();
+            return new Perceptron_SaveFile(neurons, settings);
         }
 
         public override string ToString()
@@ -227,6 +246,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
     public class Perceptron_settings : ICloneable
     {
         public int[] layers { get; private set; }
+        public bool[] bias { get; private set; }
         public activationFunction activationFunc { get; private set; }
 
         public BasicLearningSettings basicLearnSettings { get; private set; }
@@ -238,17 +258,17 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
 
         public object Clone()
         {
-            Perceptron_settings newS = new Perceptron_settings(layers, activationFunc);
+            Perceptron_settings newS = new Perceptron_settings((int[])layers.Clone(),(bool[])bias.Clone(), activationFunc);
             newS.setBasicLearnSettings(basicLearnSettings);
             return newS;
         }
 
-        public Perceptron_settings(int[] layers,
+        public Perceptron_settings(int[] layers, bool[] bias,
             activationFunction activationFunc)
         {
 
             this.layers = layers;
-
+            this.bias = bias;
             this.activationFunc= activationFunc;
         }
     }

@@ -34,6 +34,11 @@ namespace CryptoAnalizerAI.AI_training
             this.learnPosGraphic = new System.Windows.Forms.PictureBox();
             this.AIprediction = new System.Windows.Forms.PictureBox();
             this.learningParamsGroupBox = new System.Windows.Forms.GroupBox();
+            this.WeightCorrectIterLAbel = new System.Windows.Forms.Label();
+            this.WeigthSignCorrectionTextBox = new System.Windows.Forms.TextBox();
+            this.CheckRunCheckBox = new System.Windows.Forms.CheckBox();
+            this.learningRunsLabel = new System.Windows.Forms.Label();
+            this.learningRunsTextBox = new System.Windows.Forms.TextBox();
             this.delayBetweenLearnsLabel = new System.Windows.Forms.Label();
             this.DelayBetweenLearnsBox = new System.Windows.Forms.TextBox();
             this.learningStepLabel = new System.Windows.Forms.Label();
@@ -43,13 +48,16 @@ namespace CryptoAnalizerAI.AI_training
             this.currentDatasetNumLabel = new System.Windows.Forms.Label();
             this.datasetNumText = new System.Windows.Forms.TextBox();
             this.learningStatsGroupBox = new System.Windows.Forms.GroupBox();
-            this.IterationNumDisplay = new System.Windows.Forms.TextBox();
+            this.WalkNumDisplay = new System.Windows.Forms.TextBox();
             this.IterationNumLabel = new System.Windows.Forms.Label();
             this.PropagationNum = new System.Windows.Forms.Label();
-            this.PropagationNumDiaplay = new System.Windows.Forms.TextBox();
+            this.DatasetNumDiaplay = new System.Windows.Forms.TextBox();
             this.StartLearningButton = new System.Windows.Forms.Button();
             this.StopLearningButton = new System.Windows.Forms.Button();
-            this.AI_autosaveGroupBox = new System.Windows.Forms.GroupBox();
+            this.AI_learning_stopsGroup = new System.Windows.Forms.GroupBox();
+            this.errorDontChangeCounterTextBox = new System.Windows.Forms.TextBox();
+            this.countToStopTresholdTextBox = new System.Windows.Forms.TextBox();
+            this.errorDontChangeTresholdTextBox = new System.Windows.Forms.TextBox();
             this.PerceptronConfigure = new System.Windows.Forms.Button();
             this.perceptronDetailsText = new System.Windows.Forms.RichTextBox();
             this.UpdateBackgroundWorker = new System.ComponentModel.BackgroundWorker();
@@ -57,14 +65,18 @@ namespace CryptoAnalizerAI.AI_training
             this.averageErrorDisp = new System.Windows.Forms.TextBox();
             this.highestError = new System.Windows.Forms.TextBox();
             this.AutomaticTrainingBut = new System.Windows.Forms.Button();
-            this.learningRunsTextBox = new System.Windows.Forms.TextBox();
-            this.learningRunsLabel = new System.Windows.Forms.Label();
-            this.CheckRunCheckBox = new System.Windows.Forms.CheckBox();
+            this.datasetParamsGroupBox = new System.Windows.Forms.GroupBox();
+            this.ApplyCompressionBut = new System.Windows.Forms.Button();
+            this.compressionLabel = new System.Windows.Forms.Label();
+            this.compressionValueTextBox = new System.Windows.Forms.TextBox();
+            this.learningSpeedSetupBut = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.learnPosGraphic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.AIprediction)).BeginInit();
             this.learningParamsGroupBox.SuspendLayout();
             this.learningStatsGroupBox.SuspendLayout();
+            this.AI_learning_stopsGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PredictionGraphic)).BeginInit();
+            this.datasetParamsGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // loadDataBut
@@ -103,6 +115,9 @@ namespace CryptoAnalizerAI.AI_training
             // 
             // learningParamsGroupBox
             // 
+            this.learningParamsGroupBox.Controls.Add(this.learningSpeedSetupBut);
+            this.learningParamsGroupBox.Controls.Add(this.WeightCorrectIterLAbel);
+            this.learningParamsGroupBox.Controls.Add(this.WeigthSignCorrectionTextBox);
             this.learningParamsGroupBox.Controls.Add(this.CheckRunCheckBox);
             this.learningParamsGroupBox.Controls.Add(this.learningRunsLabel);
             this.learningParamsGroupBox.Controls.Add(this.learningRunsTextBox);
@@ -114,10 +129,52 @@ namespace CryptoAnalizerAI.AI_training
             this.learningParamsGroupBox.Controls.Add(this.learningSpeedText);
             this.learningParamsGroupBox.Location = new System.Drawing.Point(12, 247);
             this.learningParamsGroupBox.Name = "learningParamsGroupBox";
-            this.learningParamsGroupBox.Size = new System.Drawing.Size(188, 190);
+            this.learningParamsGroupBox.Size = new System.Drawing.Size(188, 210);
             this.learningParamsGroupBox.TabIndex = 5;
             this.learningParamsGroupBox.TabStop = false;
             this.learningParamsGroupBox.Text = "learning settings";
+            // 
+            // WeightCorrectIterLAbel
+            // 
+            this.WeightCorrectIterLAbel.AutoSize = true;
+            this.WeightCorrectIterLAbel.Location = new System.Drawing.Point(8, 156);
+            this.WeightCorrectIterLAbel.Name = "WeightCorrectIterLAbel";
+            this.WeightCorrectIterLAbel.Size = new System.Drawing.Size(91, 15);
+            this.WeightCorrectIterLAbel.TabIndex = 10;
+            this.WeightCorrectIterLAbel.Text = "weigth sign cor.";
+            // 
+            // WeigthSignCorrectionTextBox
+            // 
+            this.WeigthSignCorrectionTextBox.Location = new System.Drawing.Point(105, 152);
+            this.WeigthSignCorrectionTextBox.Name = "WeigthSignCorrectionTextBox";
+            this.WeigthSignCorrectionTextBox.Size = new System.Drawing.Size(77, 23);
+            this.WeigthSignCorrectionTextBox.TabIndex = 9;
+            // 
+            // CheckRunCheckBox
+            // 
+            this.CheckRunCheckBox.AutoSize = true;
+            this.CheckRunCheckBox.Location = new System.Drawing.Point(47, 185);
+            this.CheckRunCheckBox.Name = "CheckRunCheckBox";
+            this.CheckRunCheckBox.Size = new System.Drawing.Size(100, 19);
+            this.CheckRunCheckBox.TabIndex = 8;
+            this.CheckRunCheckBox.Text = "only checking";
+            this.CheckRunCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // learningRunsLabel
+            // 
+            this.learningRunsLabel.AutoSize = true;
+            this.learningRunsLabel.Location = new System.Drawing.Point(8, 126);
+            this.learningRunsLabel.Name = "learningRunsLabel";
+            this.learningRunsLabel.Size = new System.Drawing.Size(76, 15);
+            this.learningRunsLabel.TabIndex = 7;
+            this.learningRunsLabel.Text = "learning runs";
+            // 
+            // learningRunsTextBox
+            // 
+            this.learningRunsTextBox.Location = new System.Drawing.Point(105, 123);
+            this.learningRunsTextBox.Name = "learningRunsTextBox";
+            this.learningRunsTextBox.Size = new System.Drawing.Size(77, 23);
+            this.learningRunsTextBox.TabIndex = 6;
             // 
             // delayBetweenLearnsLabel
             // 
@@ -130,9 +187,9 @@ namespace CryptoAnalizerAI.AI_training
             // 
             // DelayBetweenLearnsBox
             // 
-            this.DelayBetweenLearnsBox.Location = new System.Drawing.Point(98, 94);
+            this.DelayBetweenLearnsBox.Location = new System.Drawing.Point(105, 94);
             this.DelayBetweenLearnsBox.Name = "DelayBetweenLearnsBox";
-            this.DelayBetweenLearnsBox.Size = new System.Drawing.Size(84, 23);
+            this.DelayBetweenLearnsBox.Size = new System.Drawing.Size(77, 23);
             this.DelayBetweenLearnsBox.TabIndex = 4;
             // 
             // learningStepLabel
@@ -146,15 +203,15 @@ namespace CryptoAnalizerAI.AI_training
             // 
             // learningStepText
             // 
-            this.learningStepText.Location = new System.Drawing.Point(98, 65);
+            this.learningStepText.Location = new System.Drawing.Point(105, 65);
             this.learningStepText.Name = "learningStepText";
-            this.learningStepText.Size = new System.Drawing.Size(84, 23);
+            this.learningStepText.Size = new System.Drawing.Size(77, 23);
             this.learningStepText.TabIndex = 2;
             // 
             // learningSpdLabel
             // 
             this.learningSpdLabel.AutoSize = true;
-            this.learningSpdLabel.Location = new System.Drawing.Point(8, 38);
+            this.learningSpdLabel.Location = new System.Drawing.Point(8, 43);
             this.learningSpdLabel.Name = "learningSpdLabel";
             this.learningSpdLabel.Size = new System.Drawing.Size(84, 15);
             this.learningSpdLabel.TabIndex = 1;
@@ -162,10 +219,11 @@ namespace CryptoAnalizerAI.AI_training
             // 
             // learningSpeedText
             // 
-            this.learningSpeedText.Location = new System.Drawing.Point(98, 35);
+            this.learningSpeedText.Location = new System.Drawing.Point(105, 35);
             this.learningSpeedText.MaxLength = 30;
             this.learningSpeedText.Name = "learningSpeedText";
-            this.learningSpeedText.Size = new System.Drawing.Size(84, 23);
+            this.learningSpeedText.ReadOnly = true;
+            this.learningSpeedText.Size = new System.Drawing.Size(53, 23);
             this.learningSpeedText.TabIndex = 0;
             // 
             // currentDatasetNumLabel
@@ -186,55 +244,55 @@ namespace CryptoAnalizerAI.AI_training
             // 
             // learningStatsGroupBox
             // 
-            this.learningStatsGroupBox.Controls.Add(this.IterationNumDisplay);
+            this.learningStatsGroupBox.Controls.Add(this.WalkNumDisplay);
             this.learningStatsGroupBox.Controls.Add(this.IterationNumLabel);
             this.learningStatsGroupBox.Controls.Add(this.PropagationNum);
-            this.learningStatsGroupBox.Controls.Add(this.PropagationNumDiaplay);
+            this.learningStatsGroupBox.Controls.Add(this.DatasetNumDiaplay);
             this.learningStatsGroupBox.Location = new System.Drawing.Point(206, 247);
             this.learningStatsGroupBox.Name = "learningStatsGroupBox";
-            this.learningStatsGroupBox.Size = new System.Drawing.Size(247, 142);
+            this.learningStatsGroupBox.Size = new System.Drawing.Size(157, 83);
             this.learningStatsGroupBox.TabIndex = 8;
             this.learningStatsGroupBox.TabStop = false;
             this.learningStatsGroupBox.Text = "learning stats";
             // 
-            // IterationNumDisplay
+            // WalkNumDisplay
             // 
-            this.IterationNumDisplay.Location = new System.Drawing.Point(57, 53);
-            this.IterationNumDisplay.Name = "IterationNumDisplay";
-            this.IterationNumDisplay.ReadOnly = true;
-            this.IterationNumDisplay.Size = new System.Drawing.Size(90, 23);
-            this.IterationNumDisplay.TabIndex = 3;
+            this.WalkNumDisplay.Location = new System.Drawing.Point(57, 53);
+            this.WalkNumDisplay.Name = "WalkNumDisplay";
+            this.WalkNumDisplay.ReadOnly = true;
+            this.WalkNumDisplay.Size = new System.Drawing.Size(90, 23);
+            this.WalkNumDisplay.TabIndex = 3;
             // 
             // IterationNumLabel
             // 
             this.IterationNumLabel.AutoSize = true;
             this.IterationNumLabel.Location = new System.Drawing.Point(7, 56);
             this.IterationNumLabel.Name = "IterationNumLabel";
-            this.IterationNumLabel.Size = new System.Drawing.Size(40, 15);
+            this.IterationNumLabel.Size = new System.Drawing.Size(26, 15);
             this.IterationNumLabel.TabIndex = 2;
-            this.IterationNumLabel.Text = "I.Num";
+            this.IterationNumLabel.Text = "Pos";
             // 
             // PropagationNum
             // 
             this.PropagationNum.AutoSize = true;
             this.PropagationNum.Location = new System.Drawing.Point(7, 29);
             this.PropagationNum.Name = "PropagationNum";
-            this.PropagationNum.Size = new System.Drawing.Size(44, 15);
+            this.PropagationNum.Size = new System.Drawing.Size(28, 15);
             this.PropagationNum.TabIndex = 1;
-            this.PropagationNum.Text = "P.Num";
+            this.PropagationNum.Text = "Run";
             // 
-            // PropagationNumDiaplay
+            // DatasetNumDiaplay
             // 
-            this.PropagationNumDiaplay.Location = new System.Drawing.Point(57, 26);
-            this.PropagationNumDiaplay.Name = "PropagationNumDiaplay";
-            this.PropagationNumDiaplay.ReadOnly = true;
-            this.PropagationNumDiaplay.Size = new System.Drawing.Size(90, 23);
-            this.PropagationNumDiaplay.TabIndex = 0;
+            this.DatasetNumDiaplay.Location = new System.Drawing.Point(57, 26);
+            this.DatasetNumDiaplay.Name = "DatasetNumDiaplay";
+            this.DatasetNumDiaplay.ReadOnly = true;
+            this.DatasetNumDiaplay.Size = new System.Drawing.Size(90, 23);
+            this.DatasetNumDiaplay.TabIndex = 0;
             // 
             // StartLearningButton
             // 
             this.StartLearningButton.BackColor = System.Drawing.Color.PaleGreen;
-            this.StartLearningButton.Location = new System.Drawing.Point(12, 443);
+            this.StartLearningButton.Location = new System.Drawing.Point(12, 463);
             this.StartLearningButton.Name = "StartLearningButton";
             this.StartLearningButton.Size = new System.Drawing.Size(75, 23);
             this.StartLearningButton.TabIndex = 9;
@@ -243,21 +301,46 @@ namespace CryptoAnalizerAI.AI_training
             // 
             // StopLearningButton
             // 
-            this.StopLearningButton.Location = new System.Drawing.Point(206, 443);
+            this.StopLearningButton.Location = new System.Drawing.Point(206, 463);
             this.StopLearningButton.Name = "StopLearningButton";
             this.StopLearningButton.Size = new System.Drawing.Size(75, 23);
             this.StopLearningButton.TabIndex = 10;
             this.StopLearningButton.Text = "Stop";
             this.StopLearningButton.UseVisualStyleBackColor = true;
             // 
-            // AI_autosaveGroupBox
+            // AI_learning_stopsGroup
             // 
-            this.AI_autosaveGroupBox.Location = new System.Drawing.Point(469, 247);
-            this.AI_autosaveGroupBox.Name = "AI_autosaveGroupBox";
-            this.AI_autosaveGroupBox.Size = new System.Drawing.Size(137, 142);
-            this.AI_autosaveGroupBox.TabIndex = 11;
-            this.AI_autosaveGroupBox.TabStop = false;
-            this.AI_autosaveGroupBox.Text = "AI autosave";
+            this.AI_learning_stopsGroup.Controls.Add(this.errorDontChangeCounterTextBox);
+            this.AI_learning_stopsGroup.Controls.Add(this.countToStopTresholdTextBox);
+            this.AI_learning_stopsGroup.Controls.Add(this.errorDontChangeTresholdTextBox);
+            this.AI_learning_stopsGroup.Location = new System.Drawing.Point(369, 247);
+            this.AI_learning_stopsGroup.Name = "AI_learning_stopsGroup";
+            this.AI_learning_stopsGroup.Size = new System.Drawing.Size(186, 190);
+            this.AI_learning_stopsGroup.TabIndex = 11;
+            this.AI_learning_stopsGroup.TabStop = false;
+            this.AI_learning_stopsGroup.Text = "AI learning stops";
+            // 
+            // errorDontChangeCounterTextBox
+            // 
+            this.errorDontChangeCounterTextBox.Location = new System.Drawing.Point(80, 22);
+            this.errorDontChangeCounterTextBox.Name = "errorDontChangeCounterTextBox";
+            this.errorDontChangeCounterTextBox.ReadOnly = true;
+            this.errorDontChangeCounterTextBox.Size = new System.Drawing.Size(100, 23);
+            this.errorDontChangeCounterTextBox.TabIndex = 2;
+            // 
+            // countToStopTresholdTextBox
+            // 
+            this.countToStopTresholdTextBox.Location = new System.Drawing.Point(80, 89);
+            this.countToStopTresholdTextBox.Name = "countToStopTresholdTextBox";
+            this.countToStopTresholdTextBox.Size = new System.Drawing.Size(100, 23);
+            this.countToStopTresholdTextBox.TabIndex = 1;
+            // 
+            // errorDontChangeTresholdTextBox
+            // 
+            this.errorDontChangeTresholdTextBox.Location = new System.Drawing.Point(80, 60);
+            this.errorDontChangeTresholdTextBox.Name = "errorDontChangeTresholdTextBox";
+            this.errorDontChangeTresholdTextBox.Size = new System.Drawing.Size(100, 23);
+            this.errorDontChangeTresholdTextBox.TabIndex = 0;
             // 
             // PerceptronConfigure
             // 
@@ -307,7 +390,7 @@ namespace CryptoAnalizerAI.AI_training
             // 
             // AutomaticTrainingBut
             // 
-            this.AutomaticTrainingBut.Location = new System.Drawing.Point(469, 443);
+            this.AutomaticTrainingBut.Location = new System.Drawing.Point(469, 463);
             this.AutomaticTrainingBut.Name = "AutomaticTrainingBut";
             this.AutomaticTrainingBut.Size = new System.Drawing.Size(137, 23);
             this.AutomaticTrainingBut.TabIndex = 17;
@@ -315,44 +398,67 @@ namespace CryptoAnalizerAI.AI_training
             this.AutomaticTrainingBut.UseVisualStyleBackColor = true;
             this.AutomaticTrainingBut.Click += new System.EventHandler(this.AutomaticTrainingBut_Click);
             // 
-            // learningRunsTextBox
+            // datasetParamsGroupBox
             // 
-            this.learningRunsTextBox.Location = new System.Drawing.Point(98, 123);
-            this.learningRunsTextBox.Name = "learningRunsTextBox";
-            this.learningRunsTextBox.Size = new System.Drawing.Size(84, 23);
-            this.learningRunsTextBox.TabIndex = 6;
+            this.datasetParamsGroupBox.Controls.Add(this.ApplyCompressionBut);
+            this.datasetParamsGroupBox.Controls.Add(this.compressionLabel);
+            this.datasetParamsGroupBox.Controls.Add(this.compressionValueTextBox);
+            this.datasetParamsGroupBox.Location = new System.Drawing.Point(206, 337);
+            this.datasetParamsGroupBox.Name = "datasetParamsGroupBox";
+            this.datasetParamsGroupBox.Size = new System.Drawing.Size(157, 100);
+            this.datasetParamsGroupBox.TabIndex = 18;
+            this.datasetParamsGroupBox.TabStop = false;
+            this.datasetParamsGroupBox.Text = "dataset compression";
             // 
-            // learningRunsLabel
+            // ApplyCompressionBut
             // 
-            this.learningRunsLabel.AutoSize = true;
-            this.learningRunsLabel.Location = new System.Drawing.Point(6, 126);
-            this.learningRunsLabel.Name = "learningRunsLabel";
-            this.learningRunsLabel.Size = new System.Drawing.Size(76, 15);
-            this.learningRunsLabel.TabIndex = 7;
-            this.learningRunsLabel.Text = "learning runs";
+            this.ApplyCompressionBut.Enabled = false;
+            this.ApplyCompressionBut.Location = new System.Drawing.Point(7, 58);
+            this.ApplyCompressionBut.Name = "ApplyCompressionBut";
+            this.ApplyCompressionBut.Size = new System.Drawing.Size(140, 23);
+            this.ApplyCompressionBut.TabIndex = 2;
+            this.ApplyCompressionBut.Text = "Apply";
+            this.ApplyCompressionBut.UseVisualStyleBackColor = true;
             // 
-            // CheckRunCheckBox
+            // compressionLabel
             // 
-            this.CheckRunCheckBox.AutoSize = true;
-            this.CheckRunCheckBox.Location = new System.Drawing.Point(48, 165);
-            this.CheckRunCheckBox.Name = "CheckRunCheckBox";
-            this.CheckRunCheckBox.Size = new System.Drawing.Size(100, 19);
-            this.CheckRunCheckBox.TabIndex = 8;
-            this.CheckRunCheckBox.Text = "only checking";
-            this.CheckRunCheckBox.UseVisualStyleBackColor = true;
+            this.compressionLabel.AutoSize = true;
+            this.compressionLabel.Location = new System.Drawing.Point(6, 30);
+            this.compressionLabel.Name = "compressionLabel";
+            this.compressionLabel.Size = new System.Drawing.Size(45, 15);
+            this.compressionLabel.TabIndex = 1;
+            this.compressionLabel.Text = "compr.";
+            // 
+            // compressionValueTextBox
+            // 
+            this.compressionValueTextBox.Location = new System.Drawing.Point(57, 22);
+            this.compressionValueTextBox.Name = "compressionValueTextBox";
+            this.compressionValueTextBox.Size = new System.Drawing.Size(90, 23);
+            this.compressionValueTextBox.TabIndex = 0;
+            // 
+            // learningSpeedSetupBut
+            // 
+            this.learningSpeedSetupBut.Location = new System.Drawing.Point(163, 36);
+            this.learningSpeedSetupBut.Name = "learningSpeedSetupBut";
+            this.learningSpeedSetupBut.Size = new System.Drawing.Size(25, 23);
+            this.learningSpeedSetupBut.TabIndex = 11;
+            this.learningSpeedSetupBut.Text = "...";
+            this.learningSpeedSetupBut.UseVisualStyleBackColor = true;
+            this.learningSpeedSetupBut.Click += new System.EventHandler(this.learningSpeedSetupBut_Click);
             // 
             // TrainingWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 478);
+            this.ClientSize = new System.Drawing.Size(800, 498);
+            this.Controls.Add(this.datasetParamsGroupBox);
             this.Controls.Add(this.AutomaticTrainingBut);
             this.Controls.Add(this.highestError);
             this.Controls.Add(this.averageErrorDisp);
             this.Controls.Add(this.PredictionGraphic);
             this.Controls.Add(this.perceptronDetailsText);
             this.Controls.Add(this.PerceptronConfigure);
-            this.Controls.Add(this.AI_autosaveGroupBox);
+            this.Controls.Add(this.AI_learning_stopsGroup);
             this.Controls.Add(this.StopLearningButton);
             this.Controls.Add(this.StartLearningButton);
             this.Controls.Add(this.learningStatsGroupBox);
@@ -372,7 +478,11 @@ namespace CryptoAnalizerAI.AI_training
             this.learningParamsGroupBox.PerformLayout();
             this.learningStatsGroupBox.ResumeLayout(false);
             this.learningStatsGroupBox.PerformLayout();
+            this.AI_learning_stopsGroup.ResumeLayout(false);
+            this.AI_learning_stopsGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PredictionGraphic)).EndInit();
+            this.datasetParamsGroupBox.ResumeLayout(false);
+            this.datasetParamsGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -396,9 +506,9 @@ namespace CryptoAnalizerAI.AI_training
         private System.Windows.Forms.Button StopLearningButton;
         private System.Windows.Forms.Label IterationNumLabel;
         private System.Windows.Forms.Label PropagationNum;
-        private System.Windows.Forms.TextBox PropagationNumDiaplay;
-        private System.Windows.Forms.TextBox IterationNumDisplay;
-        private System.Windows.Forms.GroupBox AI_autosaveGroupBox;
+        private System.Windows.Forms.TextBox DatasetNumDiaplay;
+        private System.Windows.Forms.TextBox WalkNumDisplay;
+        private System.Windows.Forms.GroupBox AI_learning_stopsGroup;
         private System.Windows.Forms.Button PerceptronConfigure;
         private System.Windows.Forms.RichTextBox perceptronDetailsText;
         private System.ComponentModel.BackgroundWorker UpdateBackgroundWorker;
@@ -411,5 +521,15 @@ namespace CryptoAnalizerAI.AI_training
         private System.Windows.Forms.CheckBox CheckRunCheckBox;
         private System.Windows.Forms.Label learningRunsLabel;
         private System.Windows.Forms.TextBox learningRunsTextBox;
+        private System.Windows.Forms.GroupBox datasetParamsGroupBox;
+        private System.Windows.Forms.Button ApplyCompressionBut;
+        private System.Windows.Forms.Label compressionLabel;
+        private System.Windows.Forms.TextBox compressionValueTextBox;
+        private System.Windows.Forms.Label WeightCorrectIterLAbel;
+        private System.Windows.Forms.TextBox WeigthSignCorrectionTextBox;
+        private System.Windows.Forms.TextBox errorDontChangeCounterTextBox;
+        private System.Windows.Forms.TextBox countToStopTresholdTextBox;
+        private System.Windows.Forms.TextBox errorDontChangeTresholdTextBox;
+        private System.Windows.Forms.Button learningSpeedSetupBut;
     }
 }

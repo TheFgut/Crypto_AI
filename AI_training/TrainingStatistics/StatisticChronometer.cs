@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using CryptoAnalizerAI.AI_training.CustomDatasets;
 using CryptoAnalizerAI.AI_training;
+using CryptoAnalizerAI.DataSavingAndLoading;
 
 namespace CryptoAnalizerAI.AI_training.TrainingStatistics
 {
-    class StatisticChronometer
+    public class StatisticChronometer
     {
         private DatasetManager datasetManager;
         private manual_AI_Trainer trainer;
@@ -20,20 +21,18 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
             trainer.predictionEvent_retDif += recordNeuralOutput;
             trainer.onTrainingStart += InitiateNewStatisticsRecording;
             trainer.onTrainingEnd += LearningFinished;
+
+            InitiateNewStatisticsRecording();
         }
 
         private void DatasetChanged()
         {
-            if (!trainer.trainingPending) return;
             PackStatisticRecording();
-            InitiateNewStatisticsRecording();
+
         }
 
         private void InitiateNewStatisticsRecording()
         {
-            int currentDatasetID = datasetManager.dataWalker.currentDatasetID;
-            Dataset currentDataset = datasetManager.datasets[currentDatasetID];
-
             ClearRecordingCache();
             neuralNetworkStats.Clear();
         }
@@ -45,16 +44,18 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
             PackStatisticRecording();
 
             DatasetLearningStats[] stats = neuralNetworkStats.ToArray();
-            neuralNetworkStats.Clear();
+            InitiateNewStatisticsRecording();
             return stats;
  
         }
 
-
+        public dataRunTransfer onRunsDataPacked;
         private void PackStatisticRecording()
         {
-            float guessFrequence = (float)guessCount / errorValues.Count;
+            if (errorValues.Count <= 1) return;
+            float guessFrequence = JsonChecks.clearInfinities((float)guessCount / errorValues.Count);
             DatasetLearningStats learningStats = new DatasetLearningStats(errorValues.ToArray(), courseValues.ToArray(), guessFrequence);
+            onRunsDataPacked?.Invoke(learningStats);
 
             neuralNetworkStats.Add(learningStats);
             ClearRecordingCache();
@@ -69,12 +70,7 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
         private const string localStatsSaveDestination = "AutomatedLearning";
         private void LearningFinished()
         {
-            PackStatisticRecording();
-            DatasetsRun NetworkStats = new DatasetsRun(neuralNetworkStats.ToArray());
-            //to do name generation
-            LoaderAndSaver<DatasetsRun> statsSaver = new LoaderAndSaver<DatasetsRun>(localStatsSaveDestination, "stat");
-            //to do - saving stats data with perceptron
-
+            //PackStatisticRecording();
         }
 
         private List<float> errorValues = new List<float>();
@@ -83,7 +79,9 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
         private void recordNeuralOutput(float[] neural, float[] real)
         {
             courseValues.Add(real[0]);
-            errorValues.Add(calculateErrorSum(neural, real));
+
+            float summedError = calculateErrorSum(neural, real);
+            errorValues.Add(JsonChecks.clearInfinities(summedError));
             if (GuessConditions.isThisGuess(neural, real))
             {
                 guessCount++;
@@ -100,6 +98,6 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
             return sum;
         }
 
-        public delegate void errorReturn(float error);
+        public delegate void dataRunTransfer(DatasetLearningStats pack);
     }
 }

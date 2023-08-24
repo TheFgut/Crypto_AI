@@ -58,7 +58,7 @@ namespace CryptoAnalizerAI.AI_training.dataset_loading
                 } 
             }
 
-            return new Dataset(contantIntervals.ToArray(), average);
+            return new Dataset(contantIntervals.ToArray(), average, (contantIntervals.Count/4f)/60);
         }
 
         private static string getDirectory(string infoFileDPath)

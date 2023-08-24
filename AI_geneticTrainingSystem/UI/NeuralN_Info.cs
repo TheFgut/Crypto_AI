@@ -24,10 +24,13 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem.UI
         {
             string statsStr = "Perceptron structure:";
             int[] aiLAyers = newP.settings.layers;
+            bool[] bias = newP.settings.bias;
             statsStr += "\ninput:" + aiLAyers[0].ToString() + " neurons";
             for (int i = 1; i < aiLAyers.Length - 1;i++)
             {
-                statsStr += "\nl" + (i - 1).ToString() + ": " + aiLAyers[i].ToString() + " neurons";
+                string biasStr = bias[i] ? "+b" : "";
+                statsStr += "\nl" + (i - 1).ToString() + ": " + aiLAyers[i].ToString() + biasStr + " neurons";
+ 
             }
             statsStr += "\noutput:" + aiLAyers[aiLAyers.Length - 1].ToString() + " neurons";
 

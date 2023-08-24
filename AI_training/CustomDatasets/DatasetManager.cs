@@ -39,12 +39,37 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
         }
 
 
+        public int compression { get; private set; } = 6;
 
+        public void setCompression(int newValue)
+        {
+            if(compression != newValue)
+            {
+                compression = newValue;
+                packDatasets();
+            }
+        }
+
+        private Dataset[] rawDatasets;
         public void SetDatasets(Dataset[] datasets)
         {
-            this.datasets = datasets;
+            rawDatasets = datasets;
+            //packing
+            packDatasets();
+
             dataLoaded?.Invoke();
             dataWalker.Reset();
+        }
+
+        private void packDatasets()
+        {
+            Dataset[] packed = new Dataset[rawDatasets.Length];
+            for (int i = 0; i < packed.Length; i++)
+            {
+                packed[i] = rawDatasets[i].pack(compression);
+            }
+
+            this.datasets = packed;
         }
 
         public delegate void datasetsLoaded();
@@ -82,7 +107,6 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
                     DatasetPositionChanged?.Invoke(datasetPos);
                 } 
             }
-            public int currentDatasetLength { get { return manager.datasets[currentDatasetNum].data.Length; } }
 
 
             public event DataWalkerEvent datasetChanged;
@@ -91,7 +115,7 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
 
             public event NumChanged DatasetPositionChanged;
 
-            private int loopPreventionCounter;
+
 
 
             public Interval[] Walk(int needInputDataElements, int needOutputDataElements, out Interval[] outputDataElements, int step = 1)
@@ -99,17 +123,9 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
                 Dataset choosed = manager.datasets[manager.choosedDatasets[currentDatasetNum]];
                 if (posInDataset + needInputDataElements + needOutputDataElements >= choosed.data.Length)
                 {
-                    loopPreventionCounter++;
-                    if(loopPreventionCounter > 10)
-                    {
-                        loopPreventionCounter = 0;
-                        
-                        outputDataElements = new Interval[0];
-                        return new Interval[0];
-                    }
 
                     MoveToNextDataset(step);
-                    return Walk(needInputDataElements, needOutputDataElements, out outputDataElements);
+                    choosed = manager.datasets[manager.choosedDatasets[currentDatasetNum]];
                 }
 
                 Interval[] input = new Interval[needInputDataElements];
@@ -128,7 +144,6 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
                 }
 
                 posInDataset += step;
-                loopPreventionCounter = 0;
 
                 outputDataElements = output;
                 return input;
@@ -137,7 +152,7 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
             private int stepDrag;
             private void MoveToNextDataset(int dataMovingStep)
             {
-                posInDataset = 0;
+
                 currentDatasetNum++;
                 if(currentDatasetNum >= manager.choosedDatasets.Length)
                 {
@@ -145,10 +160,12 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
                 }
 
                 stepDrag++;
-                if(stepDrag < dataMovingStep)
+                if(stepDrag >= dataMovingStep)
                 {
                     stepDrag = 0;
                 }
+
+                posInDataset = stepDrag;
 
                 datasetChanged?.Invoke();
                 onProceedToNextDataset?.Invoke();
@@ -163,6 +180,7 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
             {
                 posInDataset = 0;
                 datasetPos = 0;
+                stepDrag = 0;
                 datasetChanged?.Invoke();
             }
 

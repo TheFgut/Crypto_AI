@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CryptoAnalizerAI.DataSavingAndLoading;
 
 namespace CryptoAnalizerAI.AI_training.TrainingStatistics
 {
-    class DatasetLearningStats
+    public class DatasetLearningStats
     {
         //public int datasetID { get; set; }
         public float[] errors { get; set; }
@@ -20,7 +21,7 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
             this.guessFrequency = guessFrequency;
 
 
-            averageError = calculateAverageError(errors);
+            averageError = JsonChecks.clearInfinities(calculateAverageError(errors));
         }
 
         private float calculateAverageError(float[] errors)

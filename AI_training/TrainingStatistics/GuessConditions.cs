@@ -7,10 +7,12 @@ namespace CryptoAnalizerAI.AI_training.TrainingStatistics
     public static class GuessConditions
     {
         private const float coincidenceTreshold = 0.3f;
-        private const float difTreshold = 0.0005f;
+        private const float difTreshold = 0.0015f;
         public static bool isThisGuess(float[] neural, float[] real)
         {
             float neuralFinalPoint = getSum(neural);
+            if (float.IsInfinity(neuralFinalPoint) || float.IsNaN(neuralFinalPoint)) return false;
+
             float realFinalPoint = getSum(real);
             if(realFinalPoint == 0)
             {

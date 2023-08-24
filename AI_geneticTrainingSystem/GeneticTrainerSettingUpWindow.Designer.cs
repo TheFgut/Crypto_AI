@@ -37,6 +37,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
             this.updateNLabel = new System.Windows.Forms.Label();
             this.updateNumDisp = new System.Windows.Forms.TextBox();
             this.neuralInfoText = new System.Windows.Forms.RichTextBox();
+            this.changeStructureCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.TrainedAIDataGridView)).BeginInit();
             this.perceptronInfo.SuspendLayout();
             this.SuspendLayout();
@@ -45,17 +46,19 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
             // 
             this.TrainedAIDataGridView.AllowUserToAddRows = false;
             this.TrainedAIDataGridView.AllowUserToDeleteRows = false;
+            this.TrainedAIDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.TrainedAIDataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.TrainedAIDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.TrainedAIDataGridView.Location = new System.Drawing.Point(12, 12);
             this.TrainedAIDataGridView.Name = "TrainedAIDataGridView";
             this.TrainedAIDataGridView.RowHeadersWidth = 51;
             this.TrainedAIDataGridView.RowTemplate.Height = 25;
-            this.TrainedAIDataGridView.Size = new System.Drawing.Size(561, 426);
+            this.TrainedAIDataGridView.Size = new System.Drawing.Size(898, 426);
             this.TrainedAIDataGridView.TabIndex = 0;
             // 
             // ChoosedTrainedAIViewInfoBox
             // 
-            this.ChoosedTrainedAIViewInfoBox.Location = new System.Drawing.Point(579, 12);
+            this.ChoosedTrainedAIViewInfoBox.Location = new System.Drawing.Point(916, 12);
             this.ChoosedTrainedAIViewInfoBox.Name = "ChoosedTrainedAIViewInfoBox";
             this.ChoosedTrainedAIViewInfoBox.Size = new System.Drawing.Size(198, 131);
             this.ChoosedTrainedAIViewInfoBox.TabIndex = 1;
@@ -64,7 +67,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
             // 
             // TrainingStartBut
             // 
-            this.TrainingStartBut.Location = new System.Drawing.Point(579, 414);
+            this.TrainingStartBut.Location = new System.Drawing.Point(916, 414);
             this.TrainingStartBut.Name = "TrainingStartBut";
             this.TrainingStartBut.Size = new System.Drawing.Size(75, 23);
             this.TrainingStartBut.TabIndex = 2;
@@ -73,7 +76,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
             // 
             // TrainingStopBut
             // 
-            this.TrainingStopBut.Location = new System.Drawing.Point(702, 414);
+            this.TrainingStopBut.Location = new System.Drawing.Point(1039, 414);
             this.TrainingStopBut.Name = "TrainingStopBut";
             this.TrainingStopBut.Size = new System.Drawing.Size(75, 23);
             this.TrainingStopBut.TabIndex = 3;
@@ -85,7 +88,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
             this.perceptronInfo.Controls.Add(this.updateNLabel);
             this.perceptronInfo.Controls.Add(this.updateNumDisp);
             this.perceptronInfo.Controls.Add(this.neuralInfoText);
-            this.perceptronInfo.Location = new System.Drawing.Point(579, 156);
+            this.perceptronInfo.Location = new System.Drawing.Point(916, 156);
             this.perceptronInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.perceptronInfo.Name = "perceptronInfo";
             this.perceptronInfo.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -122,11 +125,24 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
             this.neuralInfoText.TabIndex = 0;
             this.neuralInfoText.Text = "";
             // 
+            // changeStructureCheckBox
+            // 
+            this.changeStructureCheckBox.AutoSize = true;
+            this.changeStructureCheckBox.Checked = true;
+            this.changeStructureCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.changeStructureCheckBox.Location = new System.Drawing.Point(962, 366);
+            this.changeStructureCheckBox.Name = "changeStructureCheckBox";
+            this.changeStructureCheckBox.Size = new System.Drawing.Size(115, 19);
+            this.changeStructureCheckBox.TabIndex = 5;
+            this.changeStructureCheckBox.Text = "change structure";
+            this.changeStructureCheckBox.UseVisualStyleBackColor = true;
+            // 
             // GeneticTrainerSettingUpWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1134, 450);
+            this.Controls.Add(this.changeStructureCheckBox);
             this.Controls.Add(this.perceptronInfo);
             this.Controls.Add(this.TrainingStopBut);
             this.Controls.Add(this.TrainingStartBut);
@@ -138,6 +154,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
             this.perceptronInfo.ResumeLayout(false);
             this.perceptronInfo.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -151,5 +168,6 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
         private System.Windows.Forms.RichTextBox neuralInfoText;
         private System.Windows.Forms.Label updateNLabel;
         private System.Windows.Forms.TextBox updateNumDisp;
+        private System.Windows.Forms.CheckBox changeStructureCheckBox;
     }
 }
