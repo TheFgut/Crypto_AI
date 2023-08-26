@@ -12,10 +12,27 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_making
     public partial class PerceptronMakerWindow : Form
     {
         private perceptronMakingCallback sendPerceptron;
-        public PerceptronMakerWindow(perceptronMakingCallback returnPerceptronTo)
+        public PerceptronMakerWindow(perceptronMakingCallback returnPerceptronTo, Perceptron previous)
         {
             sendPerceptron = returnPerceptronTo;
+
             InitializeComponent();
+            if (previous != null) describePrevStructure(previous);
+        }
+
+        private void describePrevStructure(Perceptron previous)
+        {
+            string structDescription = "";
+            bool[] biases = previous.settings.bias;
+            int[] layers = previous.settings.layers;
+            for (int i = 0; i < layers.Length - 1;i++)
+            {
+                structDescription += layers[i].ToString() + (biases[i] ? "b" : "") + "-";
+            }
+            int lastID = layers.Length - 1;
+            structDescription += layers[lastID].ToString() + (biases[lastID] ? "b" : "");
+
+            structureInfoTextBox.Text = structDescription;
         }
 
         private void CreateButton_Click(object sender, EventArgs e)
@@ -29,7 +46,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_making
         {
             int[] layers;
             bool[] bias;
-            if (Validate(structureInfo.Text, out layers, out bias))
+            if (Validate(structureInfoTextBox.Text, out layers, out bias))
             {
                 neuronsLayers = layers;
                 biases = bias;
@@ -96,7 +113,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_making
         {
             bool[] bias;
             int[] layers;
-            if (Validate(structureInfo.Text, out layers, out bias))
+            if (Validate(structureInfoTextBox.Text, out layers, out bias))
             {
                 neuronsLayers = layers;
                 biases = bias;

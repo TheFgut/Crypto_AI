@@ -61,6 +61,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem
 
         public AI_LearningRecord loadStat(int num)
         {
+
             string[] splitted = stats[num].Split("\\");
             string name = splitted[splitted.Length - 1];
 

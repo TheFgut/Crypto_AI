@@ -38,7 +38,7 @@ namespace CryptoAnalizerAI.AI_training
             trainerControls = new TrainerControllingButtons(StartLearningButton, StopLearningButton, trainer, this);
 
             visualizer = new TrainingVisualizer(PredictionGraphic, averageErrorDisp, highestError, learnPosGraphic, trainer,
-                 DatasetNumDiaplay, WalkNumDisplay, datasetsManager, this);
+                 DatasetNumDiaplay, WalkNumDisplay, datasetsManager, this, averageAI_outputTextBox, averagerealCourseChangeTextBox);
 
             trainerControls.DeactivateControls();
             ChackDatasetConfiguration();
@@ -113,7 +113,7 @@ namespace CryptoAnalizerAI.AI_training
         {
             if(perceptronConfiguration == null)
             {
-                perceptronConfiguration = new PerceptronConfigurationWindow(perceptron, PerceptronLoaded);
+                perceptronConfiguration = new PerceptronConfigurationWindow(perceptron,trainer, PerceptronLoaded);
                 perceptronConfiguration.FormClosed += perceptronConfigurationClosed;
                 perceptronConfiguration.Show();
             }

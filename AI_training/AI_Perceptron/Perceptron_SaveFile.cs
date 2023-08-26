@@ -13,6 +13,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         //settings
         public int[] layersConfiguration { get; set; }
         public bool[] bias { get; set; }
+
         public Perceptron_SaveFile(Neuron[][] neurons, Perceptron_settings settings)
         {
             //saving weigths
@@ -39,6 +40,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
             //saving settings
             layersConfiguration = settings.layers;
             bias = settings.bias;
+
         }
 
         public Perceptron_SaveFile()

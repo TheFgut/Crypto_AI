@@ -13,8 +13,24 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         public Neuron[][] neurons { get; private set; }//1 - number of layer, 2 - number of neuron in layer
         public Perceptron_settings settings { get; private set; }
 
-        public int inputLength { get { return neurons.Length == 0 || neurons == null ? 0 : neurons[0].Length; } }
-        public int outputLength { get { return neurons.Length == 0 || neurons == null ? 0 : neurons[neurons.Length - 1].Length; } }
+        public int inputDataLength
+        {
+            get
+            {
+                return neurons.Length == 0 || neurons == null ? 0 : neurons[0].Length;
+            }
+        }
+
+        public DataAdapter DataAdapter { get; private set; }
+
+        public void setDataAdapter(DataAdapter adapter)
+        {
+            DataAdapter = adapter;
+        }
+
+        public int outputDataLength { get {
+                if (DataAdapter != null) return DataAdapter.inputValuesCount;
+                return neurons.Length == 0 || neurons == null ? 0 : neurons[neurons.Length - 1].Length; } }
 
         private perceptronOutput transferOutput;
         private backPropagete backTransfer;
@@ -59,30 +75,32 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         public Perceptron(int[] layers, bool[] bias)
         {
             settings = new Perceptron_settings(layers, bias, new hyperbolicTan());
-            neuronsGenerate<Neuron>(settings, bias);
+            neuronsGenerate<Neuron>(settings, bias, false);
             
         }
 
         private Perceptron(Perceptron_settings settings)
         {
             this.settings = settings;
-            neuronsGenerate<Neuron>(settings, settings.bias);
+            neuronsGenerate<Neuron>(settings, settings.bias, false);
         }
 
-        private void neuronsGenerate<N>(Perceptron_settings settings, bool[] biases) where N : Neuron, new() 
+        private void neuronsGenerate<N>(Perceptron_settings settings, bool[] biases, bool makeOutputFit1 = false) where N : Neuron, new() 
         {
             Random randomModule = new Random();
 
             neurons = new Neuron[settings.layers.Length][];
             //input
-            int inputLCount = settings.layers[0];
+            bool bias = biases[0];
+            int BCoef = (bias ? 1 : 0);
+            int inputLCount = settings.layers[0] + BCoef;
             neurons[0] = new Neuron[inputLCount + (biases[0] ? 1 : 0)];
-            for (int i = 0; i < neurons[0].Length; i++)
+            for (int i = 0; i < neurons[0].Length - BCoef; i++)
             {
                 neurons[0][i] = new N();
   
             }
-            bool bias = biases[0];
+
             if (bias)
             {
                 neurons[0][neurons[0].Length - 1] = new Bias();
@@ -92,14 +110,16 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
             {
                 for (int LayerN = 1; LayerN < neurons.Length - 1; LayerN++)
                 {
+                    bias = biases[LayerN];
+                    BCoef = (bias ? 1 : 0);
+
                     int neuronsCount = settings.layers[LayerN];
-                    neurons[LayerN] = new Neuron[neuronsCount + (biases[LayerN] ? 1 : 0)];
+                    neurons[LayerN] = new Neuron[neuronsCount + BCoef];
                     for (int NeuronN = 0; NeuronN < neuronsCount; NeuronN++)
                     {
                         neurons[LayerN][NeuronN] = new N();
-                        neurons[LayerN][NeuronN].Init(neurons[LayerN - 1], bias, randomModule);
+                        neurons[LayerN][NeuronN].Init(neurons[LayerN - 1], randomModule, makeOutputFit1);
                     }
-                    bias = biases[LayerN];
                     if (bias)
                     {
                         neurons[LayerN][neuronsCount] = new Bias();
@@ -114,13 +134,13 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
             for (int i = 0; i < neurons[outputLayerId].Length; i++)
             {
                 neurons[outputLayerId][i] = new N();
-                neurons[outputLayerId][i].Init(neurons[lastPrev], bias, randomModule);
+                neurons[outputLayerId][i].Init(neurons[lastPrev], randomModule, makeOutputFit1);
             }
         }
 
         public float[] Calculate(float[] input)
         {
-            if (input.Length != neurons[0].Length)
+            if (input.Length != inputDataLength)
             {
                 throw new Exception("perceptron calculation input bigger or smaller than expected");
             }
@@ -146,8 +166,13 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
 
             }
 
-            if(transferOutput != null) transferOutput(outputData);
 
+            if (DataAdapter != null)
+            {
+                outputData = DataAdapter.Revert(outputData);
+            }
+
+            if (transferOutput != null) transferOutput(outputData);
             return outputData;
         }
         private void backPropagate(float learningSpeed)
@@ -175,7 +200,10 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         }
         public void Learn(float[] expectedOutput, float learningSpeed)
         {
-
+            if(DataAdapter != null)
+            {
+                expectedOutput = DataAdapter.Convert(expectedOutput);
+            }
             ereaseLerningErrorData();
             //изменение весов(обратное распостранение)
             int L = neurons.Length - 1;
@@ -220,7 +248,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         {
             //to do cloning weights values
             Perceptron perceptron = new Perceptron((Perceptron_settings)settings.Clone());
-
+            perceptron.setDataAdapter(DataAdapter);
             return perceptron;
         }        //cloning only structure
 

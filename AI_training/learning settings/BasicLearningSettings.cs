@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using CryptoAnalizerAI.Main;
 
 namespace CryptoAnalizerAI.AI_training.learning_settings
 {
@@ -91,6 +92,7 @@ namespace CryptoAnalizerAI.AI_training.learning_settings
 
         public void setCheckRun(bool checkRun)
         {
+
             this.checkRun = checkRun;
         }
 
@@ -134,10 +136,10 @@ namespace CryptoAnalizerAI.AI_training.learning_settings
 
         public delegate void multiThreadCall(bool mult);
 
-        public int learningStep { get; private set; } = 6;
+        public int learningStep { get; private set; } = 50;
         public int learningDelay { get; private set; } = 1;
 
-        public int runsCount { get; private set; } = 2;
+        public int runsCount { get; private set; } = 100;
 
         public bool checkRun { get; private set; }
 
@@ -156,8 +158,8 @@ namespace CryptoAnalizerAI.AI_training.learning_settings
             currentSpeedDisp.Text = startSpeed.ToString();
         }
 
-        public float startSpeed = 0.001f;
-        public float endSpeed = 0.0001f;
+        public float startSpeed = 0.0001f;
+        public float endSpeed = 0.00001f;
 
         public float speedDecreasErrorTreshold = 5;
         public float maxSpeedDecreaseErrorTreshold = 10;
@@ -166,9 +168,12 @@ namespace CryptoAnalizerAI.AI_training.learning_settings
         private float prevSpd = 0;
         public float getSpeed(float learnProgress, float error)
         {
-            float progressedLSpeed = Lerp(startSpeed, endSpeed, learnProgress);
-            float errorCorrectedLSpeed = Lerp(progressedLSpeed, errorDecreasedSpeed, getErrorLerpCoef(error));
+            float progressedLSpeed = Mathf.Lerp(startSpeed, endSpeed, learnProgress);
+            float errorCorrectedLSpeed = Mathf.Lerp(progressedLSpeed, errorDecreasedSpeed, getErrorLerpCoef(error));
+
             if(prevSpd != errorCorrectedLSpeed) showCurrentSpd(errorCorrectedLSpeed);
+            prevSpd = errorCorrectedLSpeed;
+
             return errorCorrectedLSpeed;
         }
 
@@ -177,22 +182,25 @@ namespace CryptoAnalizerAI.AI_training.learning_settings
             showCurrentSpd(startSpeed);
         }
 
-        private float Lerp(float firstFloat, float secondFloat, float by)
-        {
-            return firstFloat * (1 - by) + secondFloat * by;
-        }
-
 
         private float getErrorLerpCoef(float error)
         {
             if (error < speedDecreasErrorTreshold) return 0;
             if (error > maxSpeedDecreaseErrorTreshold) return 1;
+            if (float.IsNaN(error) || float.IsInfinity(error)) return 1;
             return (error - speedDecreasErrorTreshold) / (maxSpeedDecreaseErrorTreshold - speedDecreasErrorTreshold);
         }
 
         private void showCurrentSpd(float value)
         {
-            window.BeginInvoke(new setText(setTextFunc), currentSpeedDisp, value.ToString());
+            string text = value.ToString();
+            if (float.IsNaN(value)) text = "zero";
+            if (float.IsPositiveInfinity(value)) text = "+infinity";
+            if (float.IsNegativeInfinity(value)) text = "-infinity";
+
+
+
+            window.BeginInvoke(new setText(setTextFunc), currentSpeedDisp, text);
         }
 
         private void setTextFunc(TextBox box, string text)

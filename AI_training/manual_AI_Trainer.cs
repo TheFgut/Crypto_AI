@@ -91,6 +91,8 @@ namespace CryptoAnalizerAI.AI_training
 
         public event predictionDelegate predictionEvent_retCourses;
         public event predictionDelegate predictionEvent_retDif;
+
+        public event stateChangeEvent learnIterationFinished;
         public void Training(object sender, DoWorkEventArgs args)
         {
             do
@@ -102,7 +104,7 @@ namespace CryptoAnalizerAI.AI_training
                 }
 
                 Interval[] output;
-                Interval[] input = datasetManager.dataWalker.Walk(perceptron.inputLength + 1, perceptron.outputLength, out output,
+                Interval[] input = datasetManager.dataWalker.Walk(perceptron.inputDataLength + 1, perceptron.outputDataLength, out output,
                     basicSettings.checkRun ? 1 : basicSettings.learningStep + 1);
 
 
@@ -114,6 +116,9 @@ namespace CryptoAnalizerAI.AI_training
                 float[] outputAverages = getAverages(output);
                 float outpStartCourse = inputAverages[inputAverages.Length - 1];
                 float[] outputDifs = convertToDif(outputAverages, outpStartCourse, false);
+
+                //predictionEvent_retCourses(perceptronPrediction, outputAverages);
+                predictionEvent_retDif(perceptronPrediction, outputDifs);
 
                 if (!basicSettings.checkRun)
                 {
@@ -127,11 +132,10 @@ namespace CryptoAnalizerAI.AI_training
 
                     float speed = basicSettings.speed.getSpeed(progress, error);
                     perceptron.Learn(outputDifs, speed);
+                    learnIterationFinished?.Invoke();
                 }
 
 
-                //predictionEvent_retCourses(perceptronPrediction, outputAverages);
-                predictionEvent_retDif(perceptronPrediction, outputDifs);
 
                 Thread.Sleep(basicSettings.learningDelay);
             } while (true);

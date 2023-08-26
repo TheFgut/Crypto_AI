@@ -38,7 +38,7 @@ namespace CryptoAnalizerAI.AI_training
 
         private int counter;
 
-        private float treshold = 0.05f;
+        private float treshold = 0.01f;
 
         private DatasetLearningStats prev;
         private void dataRecorded(DatasetLearningStats fullDataRun)

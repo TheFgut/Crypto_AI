@@ -18,6 +18,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem.Generator
             layers[layer] += neuronsIncrease;//adding 15 percent to size
             //Perceptron_settings updatedSett = new Perceptron_settings(layers, settings.activationFunc);
             Perceptron updated = new Perceptron(layers, perceptron.settings.bias);
+            updated.setDataAdapter(perceptron.DataAdapter);
 
             return updated;
         }
@@ -32,6 +33,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem.Generator
             layers[layer] -= neuronsDecrease;
             //Perceptron_settings updatedSett = new Perceptron_settings(layers, settings.activationFunc);
             Perceptron updated = new Perceptron(layers, perceptron.settings.bias);
+            updated.setDataAdapter(perceptron.DataAdapter);
 
             return updated;
         }
@@ -51,6 +53,7 @@ namespace CryptoAnalizerAI.AI_geneticTrainingSystem.Generator
 
             //Perceptron_settings updatedSett = new Perceptron_settings(layers, settings.activationFunc);
             Perceptron updated = new Perceptron(newLayers, perceptron.settings.bias);
+            updated.setDataAdapter(perceptron.DataAdapter);
 
             return updated;
         }

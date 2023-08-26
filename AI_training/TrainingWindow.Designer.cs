@@ -34,6 +34,7 @@ namespace CryptoAnalizerAI.AI_training
             this.learnPosGraphic = new System.Windows.Forms.PictureBox();
             this.AIprediction = new System.Windows.Forms.PictureBox();
             this.learningParamsGroupBox = new System.Windows.Forms.GroupBox();
+            this.learningSpeedSetupBut = new System.Windows.Forms.Button();
             this.WeightCorrectIterLAbel = new System.Windows.Forms.Label();
             this.WeigthSignCorrectionTextBox = new System.Windows.Forms.TextBox();
             this.CheckRunCheckBox = new System.Windows.Forms.CheckBox();
@@ -69,7 +70,8 @@ namespace CryptoAnalizerAI.AI_training
             this.ApplyCompressionBut = new System.Windows.Forms.Button();
             this.compressionLabel = new System.Windows.Forms.Label();
             this.compressionValueTextBox = new System.Windows.Forms.TextBox();
-            this.learningSpeedSetupBut = new System.Windows.Forms.Button();
+            this.averageAI_outputTextBox = new System.Windows.Forms.TextBox();
+            this.averagerealCourseChangeTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.learnPosGraphic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.AIprediction)).BeginInit();
             this.learningParamsGroupBox.SuspendLayout();
@@ -133,6 +135,16 @@ namespace CryptoAnalizerAI.AI_training
             this.learningParamsGroupBox.TabIndex = 5;
             this.learningParamsGroupBox.TabStop = false;
             this.learningParamsGroupBox.Text = "learning settings";
+            // 
+            // learningSpeedSetupBut
+            // 
+            this.learningSpeedSetupBut.Location = new System.Drawing.Point(163, 36);
+            this.learningSpeedSetupBut.Name = "learningSpeedSetupBut";
+            this.learningSpeedSetupBut.Size = new System.Drawing.Size(25, 23);
+            this.learningSpeedSetupBut.TabIndex = 11;
+            this.learningSpeedSetupBut.Text = "...";
+            this.learningSpeedSetupBut.UseVisualStyleBackColor = true;
+            this.learningSpeedSetupBut.Click += new System.EventHandler(this.learningSpeedSetupBut_Click);
             // 
             // WeightCorrectIterLAbel
             // 
@@ -436,21 +448,29 @@ namespace CryptoAnalizerAI.AI_training
             this.compressionValueTextBox.Size = new System.Drawing.Size(90, 23);
             this.compressionValueTextBox.TabIndex = 0;
             // 
-            // learningSpeedSetupBut
+            // averageAI_outputTextBox
             // 
-            this.learningSpeedSetupBut.Location = new System.Drawing.Point(163, 36);
-            this.learningSpeedSetupBut.Name = "learningSpeedSetupBut";
-            this.learningSpeedSetupBut.Size = new System.Drawing.Size(25, 23);
-            this.learningSpeedSetupBut.TabIndex = 11;
-            this.learningSpeedSetupBut.Text = "...";
-            this.learningSpeedSetupBut.UseVisualStyleBackColor = true;
-            this.learningSpeedSetupBut.Click += new System.EventHandler(this.learningSpeedSetupBut_Click);
+            this.averageAI_outputTextBox.Location = new System.Drawing.Point(13, 197);
+            this.averageAI_outputTextBox.Name = "averageAI_outputTextBox";
+            this.averageAI_outputTextBox.ReadOnly = true;
+            this.averageAI_outputTextBox.Size = new System.Drawing.Size(113, 23);
+            this.averageAI_outputTextBox.TabIndex = 19;
+            // 
+            // averagerealCourseChangeTextBox
+            // 
+            this.averagerealCourseChangeTextBox.Location = new System.Drawing.Point(133, 196);
+            this.averagerealCourseChangeTextBox.Name = "averagerealCourseChangeTextBox";
+            this.averagerealCourseChangeTextBox.ReadOnly = true;
+            this.averagerealCourseChangeTextBox.Size = new System.Drawing.Size(120, 23);
+            this.averagerealCourseChangeTextBox.TabIndex = 20;
             // 
             // TrainingWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 498);
+            this.Controls.Add(this.averagerealCourseChangeTextBox);
+            this.Controls.Add(this.averageAI_outputTextBox);
             this.Controls.Add(this.datasetParamsGroupBox);
             this.Controls.Add(this.AutomaticTrainingBut);
             this.Controls.Add(this.highestError);
@@ -531,5 +551,7 @@ namespace CryptoAnalizerAI.AI_training
         private System.Windows.Forms.TextBox countToStopTresholdTextBox;
         private System.Windows.Forms.TextBox errorDontChangeTresholdTextBox;
         private System.Windows.Forms.Button learningSpeedSetupBut;
+        private System.Windows.Forms.TextBox averageAI_outputTextBox;
+        private System.Windows.Forms.TextBox averagerealCourseChangeTextBox;
     }
 }

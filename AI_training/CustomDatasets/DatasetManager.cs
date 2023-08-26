@@ -39,7 +39,7 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
         }
 
 
-        public int compression { get; private set; } = 6;
+        public int compression { get; private set; } = 8;
 
         public void setCompression(int newValue)
         {
@@ -79,6 +79,7 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
         public class DataWalker
         {
             private DatasetManager manager;
+
             public DataWalker(DatasetManager manager)
             {
                 this.manager = manager;
@@ -116,8 +117,10 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
             public event NumChanged DatasetPositionChanged;
 
 
+            public bool randomizeData;
 
 
+            private int antiLoopCounter = 0;
             public Interval[] Walk(int needInputDataElements, int needOutputDataElements, out Interval[] outputDataElements, int step = 1)
             {
                 Dataset choosed = manager.datasets[manager.choosedDatasets[currentDatasetNum]];
@@ -125,8 +128,14 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
                 {
 
                     MoveToNextDataset(step);
-                    choosed = manager.datasets[manager.choosedDatasets[currentDatasetNum]];
+                    antiLoopCounter++;
+                    if(antiLoopCounter > 10)
+                    {
+                        throw new Exception("loop");
+                    }
+                    return Walk(needInputDataElements, needOutputDataElements, out outputDataElements, step);
                 }
+                antiLoopCounter = 0;
 
                 Interval[] input = new Interval[needInputDataElements];
                 int num = posInDataset;
@@ -150,6 +159,7 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
             }
 
             private int stepDrag;
+            private int[] randomizedElements;
             private void MoveToNextDataset(int dataMovingStep)
             {
 
@@ -164,6 +174,15 @@ namespace CryptoAnalizerAI.AI_training.CustomDatasets
                 {
                     stepDrag = 0;
                 }
+
+                //if (randomizeData)
+                //{
+                //    randomizedElements = new int[];
+                //}
+                //else
+                //{
+                //    
+                //}
 
                 posInDataset = stepDrag;
 

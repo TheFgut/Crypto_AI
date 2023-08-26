@@ -7,7 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 using CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_making;
 using CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_loading;
-
+using CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_setting_up;
+using CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_analizing;
 namespace CryptoAnalizerAI.AI_training.AI_Perceptron
 {
     public partial class PerceptronConfigurationWindow : Form
@@ -15,13 +16,30 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         private Perceptron perceptron;
 
         private createdOrLoadedperceptronTransfer returnPerceptron;
-        public PerceptronConfigurationWindow(Perceptron perceptronToShow,createdOrLoadedperceptronTransfer returnPerceptron)
+        private InputAdapterSettingUp inpAdapterSetup;
+
+        private PerceptronWeigtsStatsUI weightsAnalize;
+        private manual_AI_Trainer trainer;
+        public PerceptronConfigurationWindow(Perceptron perceptronToShow,manual_AI_Trainer trainer,createdOrLoadedperceptronTransfer returnPerceptron)
         {
+            perceptron = perceptronToShow;
+
+            this.trainer = trainer;
             this.returnPerceptron = returnPerceptron;
             InitializeComponent();
             ApplyPerceptron.Enabled = false;
 
-            if (perceptronToShow != null) ShowPerceptronDetails(perceptronToShow);
+            inpAdapterSetup = new InputAdapterSettingUp(IA_inputCountTextBox, IA_outputCountTextBox, inputAdapConnectBut, connectedInputAdapterDetails);
+            inpAdapterSetup.ConnectPerceptron(perceptron);
+
+            weightsAnalize = new PerceptronWeigtsStatsUI(avgWeigthDisp, maxWDisp,minWDisp, brokenWPercentDisp, this, updateWeightsDataCheckBox);
+
+            if (perceptronToShow != null)
+            {
+                weightsAnalize.ConnectPerceptron(perceptronToShow);
+                ShowPerceptronDetails(perceptronToShow);
+            }
+            trainer.learnIterationFinished += weightsAnalize.TryRecalculateData;
         }
 
 
@@ -31,7 +49,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         {
             if(perceptronMakerWindow == null)
             {
-                perceptronMakerWindow = new PerceptronMakerWindow(perceptronCreated);
+                perceptronMakerWindow = new PerceptronMakerWindow(perceptronCreated, perceptron);
                 perceptronMakerWindow.FormClosed += perceptronMakerClosed;
                 perceptronMakerWindow.Show();
             }
@@ -49,6 +67,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         {
             perceptron = newPerceptron;
             ApplyPerceptron.Enabled = true;
+            inpAdapterSetup.ConnectPerceptron(perceptron);
             ShowPerceptronDetails(newPerceptron);
         }
 
@@ -62,7 +81,6 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
                 message += "\nl"+ i + " " + neuronsLayers[i].ToString() + " neurons";
             }
             perceptronDetailsText.Text = message;
-
         }
         //loading perceptron
         private PerceptronLoadingWindow loaderWindow;
@@ -88,6 +106,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         {
             perceptron = newPerceptron;
             ApplyPerceptron.Enabled = true;
+            inpAdapterSetup.ConnectPerceptron(perceptron);
             ShowPerceptronDetails(newPerceptron);
         }
 
@@ -108,6 +127,12 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         {
             if (loaderWindow != null) loaderWindow.Close();
             if (perceptronMakerWindow != null) perceptronMakerWindow.Close();
+
+        }
+
+        private void PerceptronConfigurationWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            trainer.learnIterationFinished -= weightsAnalize.TryRecalculateData;
         }
     }
 }

@@ -9,21 +9,28 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
         protected float num;
         public link[] links { get; protected set; }
 
-        public virtual void Init(Neuron[] inputNeurons, bool bias, Random randomModule)
+        public virtual void Init(Neuron[] inputNeurons, Random randomModule, bool compressToOneOutput)
         {
-            int normalNCount = inputNeurons.Length - (!bias ? 0 : 1);
+            int normalNCount = inputNeurons.Length;
 
             links = new link[inputNeurons.Length];
-            for (int i = 0; i < normalNCount; i++)
+            if (compressToOneOutput)
             {
-                links[i] = new link(inputNeurons[i]);
-                links[i].addToWeigth((float)randomModule.NextDouble());
+                for (int i = 0; i < normalNCount; i++)
+                {
+                    links[i] = new link(inputNeurons[i]);
+                    links[i].addToWeigth((float)randomModule.NextDouble()/ normalNCount);
+                }
             }
-            if (bias)
+            else
             {
-                links[normalNCount] = new link(inputNeurons[normalNCount]);
-                links[normalNCount].addToWeigth((float)randomModule.NextDouble());
+                for (int i = 0; i < normalNCount; i++)
+                {
+                    links[i] = new link(inputNeurons[i]);
+                    links[i].addToWeigth((float)randomModule.NextDouble());
+                }
             }
+
         }
 
 
@@ -128,33 +135,9 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
     public class RNeuron : Neuron
     {
         private link[] memoryLinks;
-        public override void Init(Neuron[] inputNeurons, bool bias, Random randomModule)
+        public override void Init(Neuron[] inputNeurons, Random randomModule, bool compressToOneOutput)
         {
-            int normalNCount = inputNeurons.Length - (!bias ? 0 : 1);
 
-            links = new link[inputNeurons.Length];
-            for (int i = 0; i < normalNCount; i++)
-            {
-                links[i] = new link(inputNeurons[i]);
-                links[i].addToWeigth((float)randomModule.NextDouble());
-            }
-            if (bias)
-            {
-                links[normalNCount] = new link(inputNeurons[normalNCount]);
-                links[normalNCount].addToWeigth((float)randomModule.NextDouble());
-            }
-
-            memoryLinks = new link[inputNeurons.Length];
-            for (int i = 0; i < normalNCount; i++)
-            {
-                memoryLinks[i] = new MemoryLink((RNeuron)inputNeurons[i]);
-                memoryLinks[i].addToWeigth((float)randomModule.NextDouble());
-            }
-            if (bias)
-            {
-                memoryLinks[normalNCount] = new link(inputNeurons[normalNCount]);
-                memoryLinks[normalNCount].addToWeigth((float)randomModule.NextDouble());
-            }
         }
 
         private float memory { get
@@ -208,7 +191,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron
 
     public class Bias : Neuron
     {
-        public override void Init(Neuron[] inputNeurons, bool bias, Random randomModule)
+        public override void Init(Neuron[] inputNeurons, Random randomModule, bool compressToOneOutput)
         {
             
         }

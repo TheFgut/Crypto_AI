@@ -30,7 +30,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_making
         private void InitializeComponent()
         {
             this.CreateButton = new System.Windows.Forms.Button();
-            this.structureInfo = new System.Windows.Forms.TextBox();
+            this.structureInfoTextBox = new System.Windows.Forms.TextBox();
             this.neuronsLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -45,15 +45,15 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_making
             this.CreateButton.UseVisualStyleBackColor = true;
             this.CreateButton.Click += new System.EventHandler(this.CreateButton_Click);
             // 
-            // structureInfo
+            // structureInfoTextBox
             // 
-            this.structureInfo.Location = new System.Drawing.Point(12, 58);
-            this.structureInfo.Name = "structureInfo";
-            this.structureInfo.PlaceholderText = "input-hidden-output";
-            this.structureInfo.Size = new System.Drawing.Size(283, 23);
-            this.structureInfo.TabIndex = 1;
-            this.structureInfo.TextChanged += new System.EventHandler(this.structureInfo_TextChanged);
-            this.structureInfo.Validating += new System.ComponentModel.CancelEventHandler(this.structureInfo_Validating);
+            this.structureInfoTextBox.Location = new System.Drawing.Point(12, 58);
+            this.structureInfoTextBox.Name = "structureInfoTextBox";
+            this.structureInfoTextBox.PlaceholderText = "input-hidden-output";
+            this.structureInfoTextBox.Size = new System.Drawing.Size(283, 23);
+            this.structureInfoTextBox.TabIndex = 1;
+            this.structureInfoTextBox.TextChanged += new System.EventHandler(this.structureInfo_TextChanged);
+            this.structureInfoTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.structureInfo_Validating);
             // 
             // neuronsLabel
             // 
@@ -70,7 +70,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_making
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(307, 116);
             this.Controls.Add(this.neuronsLabel);
-            this.Controls.Add(this.structureInfo);
+            this.Controls.Add(this.structureInfoTextBox);
             this.Controls.Add(this.CreateButton);
             this.Name = "PerceptronMakerWindow";
             this.Text = "PerceptronMakerWindow";
@@ -83,7 +83,7 @@ namespace CryptoAnalizerAI.AI_training.AI_Perceptron.perceptron_making
         #endregion
 
         private System.Windows.Forms.Button CreateButton;
-        private System.Windows.Forms.TextBox structureInfo;
+        private System.Windows.Forms.TextBox structureInfoTextBox;
         private System.Windows.Forms.Label neuronsLabel;
     }
 }

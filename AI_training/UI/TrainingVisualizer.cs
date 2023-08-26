@@ -11,13 +11,13 @@ namespace CryptoAnalizerAI.AI_training
     {
         private CurrentErrorDisplay currentError;
         private DatasetPositionDisplay positionDisp;
-        private AverageAndHighestError averageAndHighestErrDisp;
+        private AverageValuesDisp averageAndHighestErrDisp;
         private TrainDataWalkingStatistic trainWalkerStat;
         public TrainingVisualizer(PictureBox CurrentErrorDisplayPicture,TextBox averageErrorValueBox, TextBox highestErrTextBox, PictureBox learnPosGraphic, manual_AI_Trainer trainer,
-            TextBox datasetNumDisp, TextBox dataNumDisp, DatasetManager manager, TrainingWindow window)
+            TextBox datasetNumDisp, TextBox dataNumDisp, DatasetManager manager, TrainingWindow window,TextBox averageAIOutputValueBox, TextBox averageRealCourseChangeValueBox)
         {
             currentError = new CurrentErrorDisplay(CurrentErrorDisplayPicture);
-            averageAndHighestErrDisp = new AverageAndHighestError(averageErrorValueBox, highestErrTextBox);
+            averageAndHighestErrDisp = new AverageValuesDisp(averageErrorValueBox, averageAIOutputValueBox, averageRealCourseChangeValueBox, highestErrTextBox);
             trainer.predictionEvent_retDif += currentError.Update;
             trainer.predictionEvent_retDif += averageAndHighestErrDisp.Update;
             positionDisp = new DatasetPositionDisplay(learnPosGraphic,  trainer.datasetManager);
@@ -49,14 +49,14 @@ namespace CryptoAnalizerAI.AI_training
             public void Update(float[] AI_output, float[] realCourse)
             {
                 int l = AI_output.Length;
-                float average = getAverage(realCourse);
+
                 graphics.Clear(Color.White);
 
                 Pen AI_pen = new Pen(Color.Green,1);
                 Point[] outputPoints = new Point[AI_output.Length];
                 for (int i = 0; i < outputPoints.Length; i++)
                 {
-                    outputPoints[i] = new Point( (int)((i/(float)(l-1)) * width), (int)(-(AI_output[i] - average) * scale) + HalfHeigth);
+                    outputPoints[i] = new Point( (int)((i/(float)(l-1)) * width), (int)(-AI_output[i] * scale) + HalfHeigth);
                     if (outputPoints[i].Y > heigth)
                     {
                         outputPoints[i].Y = heigth;
@@ -80,7 +80,7 @@ namespace CryptoAnalizerAI.AI_training
                 Point[] coursePoints = new Point[realCourse.Length];
                 for (int i = 0; i < coursePoints.Length; i++)
                 {
-                    coursePoints[i] = new Point((int)((i / (float)(l - 1)) * width), (int)(-(realCourse[i] - average) * scale) + HalfHeigth);
+                    coursePoints[i] = new Point((int)((i / (float)(l - 1)) * width), (int)(-realCourse[i] * scale) + HalfHeigth);
                 }
                 if (outputPoints.Length == 1)
                 {
@@ -238,17 +238,21 @@ namespace CryptoAnalizerAI.AI_training
             }
         }
 
-        private class AverageAndHighestError
+        private class AverageValuesDisp
         {
-            private TextBox averageErrorValueBox;
-            private const int averageinfoCollectionPeriod = 100;
-            private LinkedList<float> errors = new LinkedList<float>();
 
             private TextBox heghestErrTextBox;
             private float maxError;
-            public AverageAndHighestError(TextBox averageErrorValueBox, TextBox heghestErrTextBox)
+
+            private AverageValueDisp averageErrorDisp;
+
+            private AverageValueDisp averageAIOutputDisp;
+            private AverageValueDisp averageRealCourseChangeDisp;
+            public AverageValuesDisp(TextBox averageErrorValueBox, TextBox averageAiOutput, TextBox averageRealCourseChange, TextBox heghestErrTextBox)
             {
-                this.averageErrorValueBox = averageErrorValueBox;
+                averageErrorDisp = new AverageValueDisp(averageErrorValueBox, "Avg err");
+                averageAIOutputDisp = new AverageValueDisp(averageAiOutput, "Avg AI_o");
+                averageRealCourseChangeDisp = new AverageValueDisp(averageRealCourseChange, "Avg rC");
                 this.heghestErrTextBox = heghestErrTextBox;
 
             }
@@ -256,41 +260,25 @@ namespace CryptoAnalizerAI.AI_training
             public void Update(float[] AI_output, float[] realCourse)
             {
                 float error = 0;
+                float ai_output = 0;
+                float courseChange = 0;
                 for (int i = 0; i < AI_output.Length; i++)
                 {
                     error += Math.Abs(realCourse[i] - AI_output[i]);
+                    ai_output += AI_output[i];
+                    courseChange += realCourse[i];
                 }
                 //calculating average
-
-                calculateAverage(error);
+                averageErrorDisp.Update(error);
+                averageAIOutputDisp.Update(ai_output);
+                averageRealCourseChangeDisp.Update(courseChange);
 
                 //calculating max
-                if(error > maxError)
+                if (error > maxError)
                 {
                     maxError = error;
-                    WriteTextSafe("Max: " + maxError.ToString(), heghestErrTextBox);
+                    WriteTextSafe("Max err: " + maxError.ToString(), heghestErrTextBox);
                 }
-            }
-
-            private void calculateAverage(float error)
-            {
-
-                errors.AddLast(error);
-
-                while (errors.Count >= averageinfoCollectionPeriod)
-                {
-                    errors.RemoveFirst();
-                }
-
-                float average = 0;
-                foreach (float err in errors)
-                {
-                    average += err;
-                }
-                average /= errors.Count;
-
-
-                WriteTextSafe("Average: " + average.ToString(), averageErrorValueBox);
             }
 
             public void WriteTextSafe(string text, TextBox textBox)
@@ -303,6 +291,58 @@ namespace CryptoAnalizerAI.AI_training
                 }
                 else
                     textBox.Text = text;
+            }
+
+
+
+            private class AverageValueDisp
+            {
+                private LinkedList<float> values = new LinkedList<float>();
+                private string desc;
+                public AverageValueDisp(TextBox disp,string description, int infoCollectPeriod = 100)
+                {
+                    this.disp = disp;
+                    desc = description;
+                    averageCollectingPeriod = infoCollectPeriod;
+                }
+
+                private TextBox disp;
+                private int averageCollectingPeriod;
+                public void Update(float newValue)
+                {
+
+                    values.AddLast(newValue);
+
+                    while (values.Count >= averageCollectingPeriod)
+                    {
+                        values.RemoveFirst();
+                    }
+
+                    float average = 0;
+                    foreach (float err in values)
+                    {
+                        average += err;
+                    }
+                    average /= values.Count;
+
+                    string text = average.ToString("N5");
+                    if (float.IsNaN(average)) text = "zero";
+                    if (float.IsPositiveInfinity(average)) text = "+infinity";
+                    if (float.IsNegativeInfinity(average)) text = "-infinity";
+                    WriteTextSafe(desc + ": " + text, disp);
+                }
+
+                private void WriteTextSafe(string text, TextBox textBox)
+                {
+                    if (textBox.InvokeRequired)
+                    {
+                        // Call this same method but append THREAD2 to the text
+                        Action safeWrite = delegate { WriteTextSafe(text, textBox); };
+                        textBox.Invoke(safeWrite);
+                    }
+                    else
+                        textBox.Text = text;
+                }
             }
         }
 
